@@ -1,0 +1,38 @@
+{
+  "name": "zenchi-zenno",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Canonical knowledge operating system — Personal MVP",
+  "license": "MIT",
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "zenchi": "node packages/cli/dist/index.js",
+    "test": "pnpm -r run test",
+    "prepare": "husky",
+    "commit": "cz",
+    "release": "semantic-release"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^12.0.9",
+    "@semantic-release/release-notes-generator": "^14.1.1",
+    "commitizen": "^4.3.2",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^9.1.7",
+    "semantic-release": "^25.0.7"
+  }
+}

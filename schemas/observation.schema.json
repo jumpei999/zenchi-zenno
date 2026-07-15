@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zenchi-zenno.dev/schemas/observation.schema.json",
+  "title": "Observation",
+  "description": "Draft schema for source observations before canonical entity extraction. Phase 0 — not validated or code-generated.",
+  "type": "object",
+  "required": [
+    "id",
+    "workspace_id",
+    "source_system",
+    "source_type",
+    "source_native_id",
+    "observed_at",
+    "ingested_at",
+    "content_ref",
+    "checksum"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "workspace_id": {
+      "type": "string"
+    },
+    "source_system": {
+      "type": "string",
+      "description": "Canonical source name, e.g. github, slack, chatgpt"
+    },
+    "source_type": {
+      "type": "string",
+      "description": "Dot-separated type, e.g. code.change, chat.thread"
+    },
+    "source_native_id": {
+      "type": "string",
+      "description": "Stable identifier in the source system"
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ingested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "actor": {
+      "type": "object",
+      "description": "Unresolved person hint",
+      "properties": {
+        "display_name": { "type": "string" },
+        "identity_hint": { "type": "string" }
+      }
+    },
+    "title": {
+      "type": "string"
+    },
+    "text": {
+      "type": "string"
+    },
+    "structured": {
+      "type": "object",
+      "description": "Source-specific structured fields"
+    },
+    "pointers": {
+      "type": "object",
+      "properties": {
+        "url": { "type": "string" },
+        "thread_id": { "type": "string" },
+        "repo": { "type": "string" },
+        "path": { "type": "string" },
+        "message_id": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "content_ref": {
+      "type": "string",
+      "description": "Reference to SourceRecord in object store"
+    },
+    "checksum": {
+      "type": "string",
+      "description": "Hash of normalized content for idempotency"
+    },
+    "language": {
+      "type": "string"
+    },
+    "localization": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "id": "conv_demo_001",
+    "title": "Choosing an ontology for personal knowledge",
+    "create_time": 1710000000,
+    "update_time": 1710003600,
+    "mapping": {
+      "n1": {
+        "message": {
+          "id": "m1",
+          "author": { "role": "user" },
+          "content": {
+            "parts": [
+              "I want Decision, Idea, Artifact, and Event as first-class types. Idea: separate Interest later."
+            ]
+          },
+          "create_time": 1710000000
+        }
+      },
+      "n2": {
+        "message": {
+          "id": "m2",
+          "author": { "role": "assistant" },
+          "content": {
+            "parts": [
+              "Going with an eight-type model is coherent. You decided Hypothesis→Confirmation should be explicit."
+            ]
+          },
+          "create_time": 1710000600
+        }
+      }
+    }
+  }
+]

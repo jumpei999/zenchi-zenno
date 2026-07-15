@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zenchi-zenno.dev/schemas/domain-event.schema.json",
+  "title": "DomainEvent",
+  "description": "Draft envelope schema for zenchi-zenno append-only domain events. Phase 0 — not validated or code-generated.",
+  "type": "object",
+  "required": [
+    "id",
+    "workspace_id",
+    "type",
+    "occurred_at",
+    "payload",
+    "schema_version"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "ULID"
+    },
+    "workspace_id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "SourceConnectionRegistered",
+        "SourceConnectionUpdated",
+        "SyncStarted",
+        "SyncCompleted",
+        "SyncFailed",
+        "SyncCursorAdvanced",
+        "SourceRecordStored",
+        "ObservationIngested",
+        "ObservationSuperseded",
+        "ClaimsExtracted",
+        "EntityUpserted",
+        "RelationUpserted",
+        "EntityArchived",
+        "EntitySuperseded",
+        "HypothesisConfirmed",
+        "HypothesisRejected",
+        "EntitiesMerged",
+        "DisputeRaised",
+        "DisputeResolved",
+        "ProjectionRebuilt",
+        "ProjectionStale",
+        "ReasoningEpisodeRecorded"
+      ]
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "correlation_id": {
+      "type": "string"
+    },
+    "causation_id": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "string",
+      "description": "User, system, or connector identifier"
+    },
+    "payload": {
+      "type": "object",
+      "description": "Event-type-specific payload. See docs/event-model.md"
+    },
+    "schema_version": {
+      "type": "string",
+      "description": "Payload schema version for evolution"
+    }
+  },
+  "additionalProperties": false
+}

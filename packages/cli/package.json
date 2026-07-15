@@ -1,0 +1,36 @@
+{
+  "name": "@zenchi-zenno/cli",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "zenchi": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "files": ["dist"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jumpei999/zenchi-zenno.git",
+    "directory": "packages/cli"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@zenchi-zenno/core": "workspace:*",
+    "@zenchi-zenno/connector-spi": "workspace:*",
+    "@zenchi-zenno/projections": "workspace:*",
+    "@zenchi-zenno/connector-markdown-local": "workspace:*",
+    "@zenchi-zenno/connector-chatgpt-export": "workspace:*",
+    "@zenchi-zenno/connector-github": "workspace:*",
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}

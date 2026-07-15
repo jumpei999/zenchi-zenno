@@ -1,0 +1,32 @@
+{
+  "name": "@zenchi-zenno/core",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jumpei999/zenchi-zenno.git",
+    "directory": "packages/core"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "node --test dist/store.test.js"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}

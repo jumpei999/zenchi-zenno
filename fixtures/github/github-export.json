@@ -1,0 +1,23 @@
+{
+  "commits": [
+    {
+      "sha": "abc123def456",
+      "message": "feat: add Connector SPI\n\nWe decided to treat API, Export, and MCP as peer transports.",
+      "author": "alice",
+      "date": "2026-07-01T10:00:00.000Z",
+      "repo": "zenchi-zenno/zenchi-zenno",
+      "url": "https://github.com/example/zenchi-zenno/commit/abc123def456"
+    }
+  ],
+  "pull_requests": [
+    {
+      "number": 12,
+      "title": "Adopt MIT for Phase 0–1, revisit Apache at Phase 2",
+      "body": "Decision: stay on MIT for community acquisition. We chose not to gate local features.",
+      "merged": true,
+      "repo": "zenchi-zenno/zenchi-zenno",
+      "url": "https://github.com/example/zenchi-zenno/pull/12",
+      "closed_at": "2026-07-10T12:00:00.000Z"
+    }
+  ]
+}

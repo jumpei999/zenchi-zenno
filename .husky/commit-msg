@@ -1,0 +1,6 @@
+pnpm commitlint --edit "$1" || exit 1
+
+if ! grep -iqE '^Signed-off-by: ' "$1"; then
+  echo "commit-msg: missing Signed-off-by (DCO 1.1). See DCO and CONTRIBUTING.md."
+  exit 1
+fi
