@@ -118,6 +118,8 @@ Maintainers merge to `main`. [semantic-release](https://semantic-release.gitbook
 
 Publishing requires a Trusted Publisher (GitHub Actions → `release.yml`) configured for each `@zenchi-zenno/*` package on npmjs.com, and pnpm 11+ / Node 22.14+ in CI.
 
+`@semantic-release/git` pushes version bump commits directly to `main`. Maintainers must configure a fine-grained PAT (Token name `zenchi-zenno-release`) as the Actions secret `RELEASE_GITHUB_TOKEN`, and set that PAT owner to **Exempt** on the `main` ruleset Bypass list (the default `GITHUB_TOKEN` cannot bypass required PRs / status checks).
+
 Contributors do **not** publish packages under `@zenchi-zenno` without maintainership. See [GOVERNANCE.md](GOVERNANCE.md).
 
 ## Documentation standards
