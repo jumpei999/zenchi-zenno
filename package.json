@@ -1,7 +1,7 @@
 {
   "name": "zenchi-zenno",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Canonical knowledge operating system — Personal MVP",
   "license": "MIT",
   "packageManager": "pnpm@11.5.3",
