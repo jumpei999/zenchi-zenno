@@ -1,10 +1,11 @@
 # zenchi-zenno Architecture
 
-**Document status:** Draft v0.2 (Phase 1 — Personal MVP in progress)  
+**Document status:** Draft v0.3 (Phase 1 — Personal MVP **usable**; Phase 1→2 gate passed for Personal)  
 **Codename:** zenchi-zenno  
 **Scope continuum:** Personal Knowledge OS → Project Knowledge OS  
 **North star:** A source-agnostic knowledge operating system that behaves like a super-architect who has been present since day one.  
-**Commercial boundary:** [commercial-boundary.md](commercial-boundary.md) · [license-strategy.md](license-strategy.md)
+**Commercial boundary:** [commercial-boundary.md](commercial-boundary.md) · [license-strategy.md](license-strategy.md)  
+**Agent skill:** [agent-skill-decision-trace.md](agent-skill-decision-trace.md)
 
 ---
 
@@ -605,13 +606,22 @@ Compared to "second brain", note-sync, and RAG-memory tools:
 
 ### In scope
 
-| Area                                   | Detail                                                                        |
-| -------------------------------------- | ----------------------------------------------------------------------------- |
-| Sources                                | ChatGPT export, GitHub (export or read-only API), local Markdown              |
-| Entity types                           | Decision, Idea, Artifact, Event                                               |
-| Interest / Learning / Person / Project | Minimal or manual creation                                                    |
-| Core                                   | Evidence links required, Confirmation CLI, full-text + simple graph traversal |
-| Agent skill                            | "What did I decide about X, and what is the evidence?"                        |
+| Area                                   | Detail                                                                                     |
+| -------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Sources                                | ChatGPT export, GitHub (**export-only** in shipped MVP; live API deferred), local Markdown |
+| Entity types                           | Decision, Idea, Artifact, Event                                                            |
+| Interest / Learning / Person / Project | Minimal or manual creation (`zenchi create`)                                               |
+| Core                                   | Evidence links required, Confirmation CLI, full-text + Decision-centric graph walk         |
+| Agent skill                            | [agent-skill-decision-trace.md](agent-skill-decision-trace.md) — CLI + MCP                 |
+
+### Shipped vs deferred (Phase 1)
+
+| Shipped                                       | Deferred (labeled)                  |
+| --------------------------------------------- | ----------------------------------- |
+| Confirm UX with evidence + confidence bands   | GitHub live read-only API           |
+| Heuristic extract with confidence labels      | General `get_entity_graph` MCP tool |
+| `zenchi trace` / MCP `get_decision_trace`     | Google suite (Phase 2)              |
+| Manual Person / Project / Interest / Learning | Auto-extract for those types        |
 
 ### Out of scope
 
@@ -652,11 +662,11 @@ timeline
 
 ### Phase gates
 
-| Transition  | Gate                                                                                 |
-| ----------- | ------------------------------------------------------------------------------------ |
-| Phase 1 → 2 | Confirmation UX is low-friction; extraction precision acceptable or clearly labeled  |
-| Phase 3 → 4 | Policy Context proven — sensitivity and workspace boundaries hold under real load    |
-| Phase 4 → 5 | Decision graphs explain architectural history at human-architect quality on eval set |
+| Transition  | Gate                                                                                                                                                                                         |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Phase 1 → 2 | Confirmation UX is low-friction; extraction precision acceptable or clearly labeled — **met for Personal MVP (usable)**; Phase 2 starts with Google suite + Interest/Learning productization |
+| Phase 3 → 4 | Policy Context proven — sensitivity and workspace boundaries hold under real load                                                                                                            |
+| Phase 4 → 5 | Decision graphs explain architectural history at human-architect quality on eval set                                                                                                         |
 
 ---
 

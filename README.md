@@ -4,7 +4,7 @@
 
 _全知全能の知識 OS へ — toward omniscient, actionable knowledge._
 
-[![Status](https://img.shields.io/badge/status-Phase%201--Personal%20MVP-blue)](#status)
+[![Status](https://img.shields.io/badge/status-Phase%201--usable-brightgreen)](#status)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CI](https://github.com/jumpei999/zenchi-zenno/actions/workflows/ci.yml/badge.svg)](https://github.com/jumpei999/zenchi-zenno/actions/workflows/ci.yml)
 [![Release](https://github.com/jumpei999/zenchi-zenno/actions/workflows/release.yml/badge.svg)](https://github.com/jumpei999/zenchi-zenno/actions/workflows/release.yml)
@@ -15,10 +15,19 @@ zenchi-zenno continuously normalizes scattered activity signals — commits, doc
 
 ## Status
 
-**Phase 1 — Personal MVP (in progress).** Local-first Personal Knowledge OS: ingest, confirm, search, and decision-trace. **No monetization features** in this repository.
+**Phase 1 — Personal MVP (usable).** Local-first Personal Knowledge OS: ingest → confirm → search → decision-trace → MCP egress. The Phase 1→2 gate (low-friction confirmation + labeled extraction confidence) is met for Personal use. **No monetization features** in this repository.
 
 - **OSS:** Personal / local use is **completely free** forever (Community plan).
 - **Future commercial:** Team Workspaces, managed Cloud, and Enterprise Policy are planned separately — see [docs/commercial-boundary.md](docs/commercial-boundary.md).
+
+### Phase 1 deferred (labeled)
+
+| Item                                          | Status                                                                 |
+| --------------------------------------------- | ---------------------------------------------------------------------- |
+| GitHub connector                              | **Export-only** — live read-only API is a later candidate              |
+| General entity graph (`get_entity_graph`)     | Not shipped — Decision-centric `trace` / MCP `get_decision_trace` only |
+| Google Drive / Gmail / Calendar               | **Phase 2**                                                            |
+| Auto-extract for Person / Interest / Learning | Manual `zenchi create` only in Phase 1                                 |
 
 ## Quick start
 
@@ -57,20 +66,21 @@ pnpm zenchi mcp
 
 ## Documentation
 
-| Document                                                   | Description                             |
-| ---------------------------------------------------------- | --------------------------------------- |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)               | Master architecture (11 sections)       |
-| [docs/knowledge-model.md](docs/knowledge-model.md)         | Entity types, relations, lifecycles     |
-| [docs/event-model.md](docs/event-model.md)                 | Domain event catalog, idempotency       |
-| [docs/connector-spi.md](docs/connector-spi.md)             | Connector contract (API / Export / MCP) |
-| [docs/ubiquitous-language.md](docs/ubiquitous-language.md) | Glossary                                |
-| [docs/commercial-boundary.md](docs/commercial-boundary.md) | OSS vs commercial boundary              |
-| [docs/license-strategy.md](docs/license-strategy.md)       | MIT now; Apache + cloud repo at Phase 2 |
-| [GOVERNANCE.md](GOVERNANCE.md)                             | Project governance                      |
-| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)                   | Community standards                     |
-| [SECURITY.md](SECURITY.md)                                 | Vulnerability reporting                 |
-| [DCO](DCO)                                                 | Developer Certificate of Origin         |
-| [TRADEMARK.md](TRADEMARK.md)                               | Trademark policy                        |
+| Document                                                                 | Description                             |
+| ------------------------------------------------------------------------ | --------------------------------------- |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)                             | Master architecture (11 sections)       |
+| [docs/agent-skill-decision-trace.md](docs/agent-skill-decision-trace.md) | Agent skill: decision + evidence        |
+| [docs/knowledge-model.md](docs/knowledge-model.md)                       | Entity types, relations, lifecycles     |
+| [docs/event-model.md](docs/event-model.md)                               | Domain event catalog, idempotency       |
+| [docs/connector-spi.md](docs/connector-spi.md)                           | Connector contract (API / Export / MCP) |
+| [docs/ubiquitous-language.md](docs/ubiquitous-language.md)               | Glossary                                |
+| [docs/commercial-boundary.md](docs/commercial-boundary.md)               | OSS vs commercial boundary              |
+| [docs/license-strategy.md](docs/license-strategy.md)                     | MIT now; Apache + cloud repo at Phase 2 |
+| [GOVERNANCE.md](GOVERNANCE.md)                                           | Project governance                      |
+| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)                                 | Community standards                     |
+| [SECURITY.md](SECURITY.md)                                               | Vulnerability reporting                 |
+| [DCO](DCO)                                                               | Developer Certificate of Origin         |
+| [TRADEMARK.md](TRADEMARK.md)                                             | Trademark policy                        |
 
 ## Repository map
 
