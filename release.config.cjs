@@ -11,7 +11,6 @@ module.exports = {
     [
       '@semantic-release/commit-analyzer',
       {
-        preset: 'conventionalcommits',
         releaseRules: [
           { breaking: true, release: 'minor' },
           { type: 'feat', release: 'minor' },
