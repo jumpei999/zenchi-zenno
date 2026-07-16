@@ -6,6 +6,8 @@ _全知全能の知識 OS へ — toward omniscient, actionable knowledge._
 
 [![Status](https://img.shields.io/badge/status-Phase%201--Personal%20MVP-blue)](#status)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![CI](https://github.com/jumpei999/zenchi-zenno/actions/workflows/ci.yml/badge.svg)](https://github.com/jumpei999/zenchi-zenno/actions/workflows/ci.yml)
+[![Release](https://github.com/jumpei999/zenchi-zenno/actions/workflows/release.yml/badge.svg)](https://github.com/jumpei999/zenchi-zenno/actions/workflows/release.yml)
 
 zenchi-zenno continuously normalizes scattered activity signals — commits, documents, conversations, exports — into shared knowledge concepts (`Decision`, `Idea`, `Project`, `Person`, `Interest`, `Learning`, `Artifact`, `Event`). It is designed to behave like a **super-architect who has been present since day one**: traceable decisions, evidence-backed answers, and knowledge that evolves over time.
 
