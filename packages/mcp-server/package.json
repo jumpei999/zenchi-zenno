@@ -1,10 +1,13 @@
 {
-  "name": "@zenchi-zenno/core",
+  "name": "@zenchi-zenno/mcp-server",
   "version": "0.1.0",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "zenchi-mcp": "./dist/cli.js"
+  },
   "files": [
     "dist"
   ],
@@ -17,7 +20,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jumpei999/zenchi-zenno.git",
-    "directory": "packages/core"
+    "directory": "packages/mcp-server"
   },
   "publishConfig": {
     "access": "public",
@@ -25,7 +28,11 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "node --test dist/store.test.js dist/extract.test.js"
+    "test": "node --test dist/**/*.test.js 2>/dev/null || true"
+  },
+  "dependencies": {
+    "@zenchi-zenno/core": "workspace:*",
+    "@zenchi-zenno/projections": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

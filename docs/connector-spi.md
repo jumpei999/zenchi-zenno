@@ -157,15 +157,15 @@ sequenceDiagram
 
 ## MCP egress (zenchi-zenno as server)
 
-zenchi-zenno may expose an MCP server for agent clients. Planned tools:
+Phase 1 ships a thin local MCP server (`@zenchi-zenno/mcp-server`, `zenchi mcp`) with:
 
-| Tool                 | Description                                         |
-| -------------------- | --------------------------------------------------- |
-| `search_entities`    | Full-text and filter search over canonical entities |
-| `get_entity`         | Fetch entity by ID with relations                   |
-| `get_decision_trace` | Walk Decision graph with evidence                   |
-| `list_evidence`      | Evidence and Observations for an entity             |
-| `list_hypotheses`    | Pending hypotheses for confirmation                 |
+| Tool                 | Description                                          |
+| -------------------- | ---------------------------------------------------- |
+| `search_entities`    | Full-text and filter search over canonical entities  |
+| `get_decision_trace` | Walk Decision graph with evidence and `derived_from` |
+| `list_evidence`      | Evidence and Observations for an entity              |
+
+Planned later: `get_entity`, `list_hypotheses`.
 
 Egress MCP tools operate on **canonical knowledge**, not raw connector internals.
 

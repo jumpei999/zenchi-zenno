@@ -8,6 +8,16 @@ export interface ExtractResult {
   evidence: Evidence[];
 }
 
+export type ConfidenceBand = 'high' | 'medium' | 'low' | 'unknown';
+
+/** Human-readable confidence band for CLI / MCP display. */
+export function confidenceLabel(confidence?: number): ConfidenceBand {
+  if (confidence == null || Number.isNaN(confidence)) return 'unknown';
+  if (confidence >= 0.8) return 'high';
+  if (confidence >= 0.55) return 'medium';
+  return 'low';
+}
+
 const DECISION_PATTERNS = [
   /\bwe (?:decided|chose|picked|selected)\b/i,
   /\bdecision:\s*/i,
@@ -229,27 +239,84 @@ export function searchEntities(entities: Entity[], query: string): Entity[] {
     });
 }
 
+export interface EvidenceLink {
+  evidence: Evidence;
+  observation?: Observation;
+  snippet: string;
+}
+
+export interface DecisionTraceNode {
+  decision: Entity;
+  evidence: EvidenceLink[];
+  derived_from: Array<{
+    relation: Relation;
+    observation?: Observation;
+  }>;
+  related_entities: Entity[];
+}
+
+export interface DecisionTraceResult {
+  nodes: DecisionTraceNode[];
+}
+
+export function listEvidenceForEntity(
+  store: KnowledgeStore,
+  entityId: string,
+): EvidenceLink[] {
+  const entity = store.getEntity(entityId);
+  if (!entity) return [];
+  const out: EvidenceLink[] = [];
+  for (const eid of entity.evidence_refs) {
+    const ev = store.evidence.find((x) => x.id === eid);
+    if (!ev) continue;
+    const observation = store.observations.find(
+      (o) => o.id === ev.observation_id,
+    );
+    out.push({
+      evidence: ev,
+      observation,
+      snippet: (observation?.text ?? observation?.title ?? '')
+        .slice(0, 240)
+        .replaceAll('\n', ' '),
+    });
+  }
+  return out;
+}
+
+/**
+ * Decision archaeology with a minimal graph walk:
+ * Decision → evidence/observations, derived_from edges, sibling entities sharing evidence.
+ */
 export function decisionTrace(
   store: KnowledgeStore,
   query: string,
-): {
-  decisions: Entity[];
-  evidence: Array<{ evidence: Evidence; observation?: Observation }>;
-} {
+): DecisionTraceResult {
   const decisions = searchEntities(store.entities, query).filter(
     (e) => e.type === 'Decision',
   );
-  const evidenceOut: Array<{ evidence: Evidence; observation?: Observation }> =
-    [];
-  for (const d of decisions) {
-    for (const eid of d.evidence_refs) {
-      const ev = store.evidence.find((x) => x.id === eid);
-      if (!ev) continue;
-      const observation = store.observations.find(
-        (o) => o.id === ev.observation_id,
-      );
-      evidenceOut.push({ evidence: ev, observation });
-    }
+  const nodes: DecisionTraceNode[] = [];
+
+  for (const decision of decisions) {
+    const evidence = listEvidenceForEntity(store, decision.id);
+
+    const derived_from = store.relations
+      .filter(
+        (r) => r.predicate === 'derived_from' && r.from_id === decision.id,
+      )
+      .map((relation) => ({
+        relation,
+        observation: store.observations.find((o) => o.id === relation.to_id),
+      }));
+
+    const evidenceIds = new Set(decision.evidence_refs);
+    const related_entities = store.entities.filter(
+      (e) =>
+        e.id !== decision.id &&
+        e.evidence_refs.some((ref) => evidenceIds.has(ref)),
+    );
+
+    nodes.push({ decision, evidence, derived_from, related_entities });
   }
-  return { decisions, evidence: evidenceOut };
+
+  return { nodes };
 }

@@ -1,6 +1,42 @@
 /** Canonical knowledge types for zenchi-zenno Personal MVP. */
 
-export type EntityType = 'Decision' | 'Idea' | 'Artifact' | 'Event';
+/** All eight ontology types. Phase 1 auto-extract covers Decision/Idea/Artifact/Event; others are manual. */
+export type EntityType =
+  | 'Decision'
+  | 'Idea'
+  | 'Artifact'
+  | 'Event'
+  | 'Person'
+  | 'Project'
+  | 'Interest'
+  | 'Learning';
+
+export const ENTITY_TYPES: readonly EntityType[] = [
+  'Decision',
+  'Idea',
+  'Artifact',
+  'Event',
+  'Person',
+  'Project',
+  'Interest',
+  'Learning',
+] as const;
+
+/** Types produced by heuristic extractors in Phase 1. */
+export const AUTO_EXTRACT_TYPES: readonly EntityType[] = [
+  'Decision',
+  'Idea',
+  'Artifact',
+  'Event',
+] as const;
+
+/** Types intended for manual create in Phase 1. */
+export const MANUAL_ENTITY_TYPES: readonly EntityType[] = [
+  'Person',
+  'Project',
+  'Interest',
+  'Learning',
+] as const;
 
 export type ConfirmationState =
   | 'hypothesized'

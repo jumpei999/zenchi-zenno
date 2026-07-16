@@ -26,6 +26,7 @@
     "@zenchi-zenno/core": "workspace:*",
     "@zenchi-zenno/connector-spi": "workspace:*",
     "@zenchi-zenno/projections": "workspace:*",
+    "@zenchi-zenno/mcp-server": "workspace:*",
     "@zenchi-zenno/connector-markdown-local": "workspace:*",
     "@zenchi-zenno/connector-chatgpt-export": "workspace:*",
     "@zenchi-zenno/connector-github": "workspace:*",

@@ -29,10 +29,22 @@ pnpm zenchi --help
 pnpm zenchi init
 pnpm zenchi ingest --connector markdown-local --path ./fixtures/notes
 pnpm zenchi ingest --connector chatgpt-export --path ./fixtures/chatgpt-export
-pnpm zenchi search "postgres"
-pnpm zenchi trace --query "database choice"
+
+# Extractions are hypothesized — review evidence, then accept or reject
 pnpm zenchi confirm --list
+pnpm zenchi confirm --accept <entity-id>
+
+pnpm zenchi search "postgres"
+pnpm zenchi trace --query "database"
+
+# Manual entities (Person / Project / Interest / Learning)
+pnpm zenchi create --type Project --title "zenchi-zenno MVP" --goal "Ship Personal OS"
+
+# Optional: MCP egress for agent clients (stdio)
+pnpm zenchi mcp
 ```
+
+**Hypothesis → Confirmation:** Heuristic extractors never auto-confirm Decisions. Always review with `zenchi confirm` before treating knowledge as accepted.
 
 ## Scope continuum
 
@@ -67,6 +79,7 @@ zenchi-zenno/
 │   ├── core/          # Domain types, event log, entity store
 │   ├── connector-spi/ # Connector interface
 │   ├── projections/   # Full-text search (local)
+│   ├── mcp-server/    # MCP egress (stdio tools)
 │   └── cli/           # Personal CLI
 ├── connectors/        # chatgpt-export, github, markdown-local
 ├── fixtures/          # Synthetic demos (no personal data)

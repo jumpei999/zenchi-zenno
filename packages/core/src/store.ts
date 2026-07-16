@@ -251,6 +251,7 @@ export class KnowledgeStore {
   setConfirmation(
     entityId: string,
     state: 'confirmed' | 'rejected',
+    actor = 'cli',
   ): Entity | undefined {
     const entity = this.getEntity(entityId);
     if (!entity) return undefined;
@@ -260,7 +261,7 @@ export class KnowledgeStore {
       this.upsertEntity(entity);
       this.appendEvent('HypothesisConfirmed', {
         entity_id: entity.id,
-        confirmed_by: 'cli',
+        confirmed_by: actor,
       });
     } else {
       entity.confirmation_state = 'archived';
@@ -269,11 +270,52 @@ export class KnowledgeStore {
       this.upsertEntity(entity);
       this.appendEvent('HypothesisRejected', {
         entity_id: entity.id,
-        rejected_by: 'cli',
+        rejected_by: actor,
         reason: 'user_rejected',
       });
     }
     return entity;
+  }
+
+  /**
+   * Create a user-authored entity (Person/Project/Interest/Learning, or any type).
+   * Manual creates are confirmed — the human is the source of truth.
+   */
+  createManualEntity(input: {
+    type: Entity['type'];
+    title: string;
+    summary?: string;
+    status?: string;
+    tags?: string[];
+    attributes?: Record<string, unknown>;
+  }): Entity {
+    const ts = nowIso();
+    const entity: Entity = {
+      id: newId(),
+      workspace_id: this.state.workspace.id,
+      type: input.type,
+      title: input.title,
+      summary: input.summary,
+      status: input.status ?? defaultStatusForType(input.type),
+      confidence: 1,
+      confirmation_state: 'confirmed',
+      evidence_refs: [],
+      tags: input.tags,
+      provenance: { extractor: 'manual' },
+      attributes: input.attributes,
+      created_at: ts,
+      updated_at: ts,
+    };
+    this.upsertEntity(entity);
+    return entity;
+  }
+
+  listHypotheses(type?: Entity['type']): Entity[] {
+    return this.state.entities.filter(
+      (e) =>
+        e.confirmation_state === 'hypothesized' &&
+        (type === undefined || e.type === type),
+    );
   }
 
   exportCanonical(): object {
@@ -288,5 +330,28 @@ export class KnowledgeStore {
       })),
       events_count: this.state.events.length,
     };
+  }
+}
+
+function defaultStatusForType(type: Entity['type']): string {
+  switch (type) {
+    case 'Decision':
+      return 'accepted';
+    case 'Idea':
+      return 'captured';
+    case 'Artifact':
+      return 'active';
+    case 'Event':
+      return 'occurred';
+    case 'Person':
+      return 'active';
+    case 'Project':
+      return 'active';
+    case 'Interest':
+      return 'active';
+    case 'Learning':
+      return 'noted';
+    default:
+      return 'active';
   }
 }
