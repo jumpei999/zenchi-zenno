@@ -1,0 +1,19 @@
+---
+description: Require user confirmation before any SemVer-breaking commit or release
+alwaysApply: true
+---
+
+# Breaking changes — ask first
+
+Do **not** introduce SemVer-breaking work without the user's explicit confirmation.
+
+Treat as breaking (must ask before committing or recommending):
+
+- Conventional Commits with `!` (e.g. `feat!:`, `fix!:`)
+- Commit bodies/footers with `BREAKING CHANGE:`
+- Ontology / public SPI / exported API removals or incompatible shape changes
+- Any change you expect semantic-release to treat as **major**
+
+Until the user confirms, prefer a non-breaking path (additive API, deprecation, minor/patch commit types).
+
+When proposing a breaking change, stop and ask: what breaks, why it must break, and whether they want a major bump now.
