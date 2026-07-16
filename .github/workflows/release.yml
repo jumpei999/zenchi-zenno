@@ -45,7 +45,13 @@ jobs:
       # id-token for a short-lived npm credential per package, so no NPM_TOKEN
       # secret is needed. Requires `id-token: write` above and a Trusted
       # Publisher configured for each @zenchi-zenno/* package on npmjs.com.
+      # HUSKY=0 skips local hooks; DCO sign-off is in release.config.cjs.
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HUSKY: 0
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: github-actions[bot]
+          GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
         run: pnpm release

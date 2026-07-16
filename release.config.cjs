@@ -36,7 +36,7 @@ module.exports = {
           'pnpm-lock.yaml',
         ],
         message:
-          'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
+          'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}\n\nSigned-off-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>',
       },
     ],
     '@semantic-release/github',
