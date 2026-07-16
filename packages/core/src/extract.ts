@@ -211,9 +211,23 @@ export function applyExtract(
   for (const r of result.relations) store.upsertRelation(r);
 }
 
+/** Lightweight query aliases so natural phrases hit domain terms. */
+const QUERY_ALIASES: Record<string, string[]> = {
+  database: ['database', 'postgres', 'postgresql', 'db'],
+  db: ['db', 'database', 'postgres', 'postgresql'],
+  postgres: ['postgres', 'postgresql', 'database'],
+  postgresql: ['postgresql', 'postgres', 'database'],
+};
+
+function tokenMatchesHaystack(hay: string, token: string): boolean {
+  const aliases = QUERY_ALIASES[token] ?? [token];
+  return aliases.some((a) => hay.includes(a));
+}
+
 export function searchEntities(entities: Entity[], query: string): Entity[] {
   const q = normalizeText(query);
   if (!q) return [];
+  const rawTokens = q.split(' ').filter(Boolean);
   return entities
     .filter((e) => {
       const hay = normalizeText(
@@ -221,7 +235,13 @@ export function searchEntities(entities: Entity[], query: string): Entity[] {
           ' ',
         ),
       );
-      return hay.includes(q) || q.split(' ').every((t) => hay.includes(t));
+      if (hay.includes(q)) return true;
+      // Single token: OR aliases (e.g. "database" → postgresql ADR)
+      if (rawTokens.length === 1) {
+        return tokenMatchesHaystack(hay, rawTokens[0] ?? '');
+      }
+      // Multi-word: every original token must match (alias-aware AND)
+      return rawTokens.every((t) => tokenMatchesHaystack(hay, t));
     })
     .sort((a, b) => {
       // Prefer confirmed

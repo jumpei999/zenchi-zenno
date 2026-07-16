@@ -83,6 +83,16 @@ interface Connector {
 | `has_more`     | Pagination flag                  |
 | `errors`       | Non-fatal per-item errors        |
 
+### `SyncInput` (implementation)
+
+| Field          | Description                                                                 |
+| -------------- | --------------------------------------------------------------------------- |
+| `path`         | Local export / fixture path                                                 |
+| `workspace_id` | Target workspace                                                            |
+| `token`        | Optional API credential (e.g. GitHub PAT). Never log or put in Observations |
+| `repo`         | Optional API scope such as `owner/name`                                     |
+| `limit`        | Optional page size for recent-N API fetches                                 |
+
 ---
 
 ## Lifecycle
@@ -167,8 +177,9 @@ Phase 1 ships a thin local MCP server (`@zenchi-zenno/mcp-server`, `zenchi mcp`)
 | `search_entities`    | Full-text and filter search over canonical entities  |
 | `get_decision_trace` | Walk Decision graph with evidence and `derived_from` |
 | `list_evidence`      | Evidence and Observations for an entity              |
+| `list_hypotheses`    | Hypothesized entities awaiting confirmation          |
 
-Planned later: `get_entity`, `list_hypotheses`.
+Planned later: `get_entity`, `get_entity_graph`.
 
 Egress MCP tools operate on **canonical knowledge**, not raw connector internals.
 

@@ -24,7 +24,7 @@ zenchi-zenno continuously normalizes scattered activity signals — commits, doc
 
 | Item                                          | Status                                                                 |
 | --------------------------------------------- | ---------------------------------------------------------------------- |
-| GitHub connector                              | **Export-only** — live read-only API is a later candidate              |
+| GitHub connector                              | Export + optional read-only REST API (`--repo` + token)                |
 | General entity graph (`get_entity_graph`)     | Not shipped — Decision-centric `trace` / MCP `get_decision_trace` only |
 | Google Drive / Gmail / Calendar               | **Phase 2**                                                            |
 | Auto-extract for Person / Interest / Learning | Manual `zenchi create` only in Phase 1                                 |
@@ -40,6 +40,11 @@ pnpm zenchi --help
 pnpm zenchi init
 pnpm zenchi ingest --connector markdown-local --path ./fixtures/notes
 pnpm zenchi ingest --connector chatgpt-export --path ./fixtures/chatgpt-export
+pnpm zenchi ingest --connector github --path ./fixtures/github
+
+# Network footprint (optional): recent commits/PRs via read-only GitHub API
+# export GITHUB_TOKEN=...   # or ZENCHI_GITHUB_TOKEN; scopes: contents:read, pull-requests:read
+# pnpm zenchi ingest --connector github --repo owner/name
 
 # Extractions are hypothesized — review evidence, then accept or reject
 pnpm zenchi confirm --list

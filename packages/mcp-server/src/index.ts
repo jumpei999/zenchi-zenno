@@ -2,6 +2,7 @@ import { createInterface } from 'node:readline';
 import {
   confidenceLabel,
   decisionTrace,
+  type Entity,
   KnowledgeStore,
   listEvidenceForEntity,
 } from '@zenchi-zenno/core';
@@ -59,6 +60,20 @@ const TOOLS = [
         entity_id: { type: 'string', description: 'Canonical entity id' },
       },
       required: ['entity_id'],
+    },
+  },
+  {
+    name: 'list_hypotheses',
+    description:
+      'List hypothesized entities awaiting confirmation (same as `zenchi confirm --list`).',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        type: {
+          type: 'string',
+          description: 'Optional entity type filter (Decision, Idea, …)',
+        },
+      },
     },
   },
 ] as const;
@@ -166,6 +181,25 @@ function handleTool(
           snippet: e.snippet,
         })),
       });
+    }
+    case 'list_hypotheses': {
+      const type =
+        typeof args.type === 'string'
+          ? (args.type as Entity['type'])
+          : undefined;
+      const hyps = store.listHypotheses(type);
+      return toolResult(
+        hyps.map((e) => ({
+          id: e.id,
+          type: e.type,
+          title: e.title,
+          confirmation_state: e.confirmation_state,
+          confidence: e.confidence,
+          confidence_band: confidenceLabel(e.confidence),
+          evidence_count: e.evidence_refs.length,
+          summary: e.summary,
+        })),
+      );
     }
     default:
       throw new Error(`Unknown tool: ${name}`);

@@ -173,24 +173,71 @@ program
     '-c, --connector <id>',
     'markdown-local | chatgpt-export | github',
   )
-  .requiredOption('-p, --path <path>', 'export path or directory')
+  .option(
+    '-p, --path <path>',
+    'export path or directory (required except github API mode)',
+  )
+  .option(
+    '--repo <owner/name>',
+    'GitHub API mode: repository (uses GITHUB_TOKEN or ZENCHI_GITHUB_TOKEN)',
+  )
+  .option(
+    '--limit <n>',
+    'GitHub API mode: max commits/PRs per type (default 30)',
+    '30',
+  )
   .option('-d, --data-dir <path>', 'workspace directory', defaultDataDir())
   .action(
-    async (opts: { connector: string; path: string; dataDir: string }) => {
+    async (opts: {
+      connector: string;
+      path?: string;
+      repo?: string;
+      limit: string;
+      dataDir: string;
+    }) => {
       const store = openStore(opts.dataDir);
       const connector = getConnector(opts.connector);
+      const token =
+        process.env.ZENCHI_GITHUB_TOKEN ??
+        process.env.GITHUB_TOKEN ??
+        undefined;
+      const useGithubApi =
+        opts.connector === 'github' && Boolean(opts.repo) && Boolean(token);
+
+      if (opts.connector === 'github' && opts.repo && !token) {
+        console.error(
+          'GitHub API mode requires GITHUB_TOKEN or ZENCHI_GITHUB_TOKEN in the environment.',
+        );
+        process.exit(1);
+      }
+      if (!useGithubApi && !opts.path) {
+        console.error(
+          'Provide --path for export/local connectors, or --repo with a GitHub token for API mode.',
+        );
+        process.exit(1);
+      }
+
+      const limit = Number.parseInt(opts.limit, 10);
       const correlation = `sync-${Date.now()}`;
       store.appendEvent(
         'SyncStarted',
-        { connector: opts.connector, path: opts.path },
+        {
+          connector: opts.connector,
+          path: opts.path,
+          repo: opts.repo,
+          mode: useGithubApi ? 'api' : 'export',
+        },
         {
           correlation_id: correlation,
         },
       );
 
       const sync = await connector.sync({
-        path: resolve(opts.path),
+        path: opts.path ? resolve(opts.path) : undefined,
         workspace_id: store.workspace.id,
+        token: useGithubApi ? token : undefined,
+        repo: useGithubApi ? opts.repo : undefined,
+        limit: Number.isFinite(limit) ? limit : 30,
       });
 
       let ingested = 0;
@@ -228,6 +275,7 @@ program
           skipped,
           extracted,
           errors: sync.errors,
+          mode: useGithubApi ? 'api' : 'export',
         },
         { correlation_id: correlation },
       );
@@ -236,6 +284,8 @@ program
         JSON.stringify(
           {
             connector: opts.connector,
+            mode: useGithubApi ? 'api' : 'export',
+            repo: opts.repo,
             ingested,
             skipped_duplicates: skipped,
             entities_extracted: extracted,
