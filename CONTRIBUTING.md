@@ -82,8 +82,10 @@ Maintainers merge to `main`. [semantic-release](https://semantic-release.gitbook
 
 1. Determines the next SemVer from Conventional Commits
 2. Updates `CHANGELOG.md` and package versions (locked across the monorepo)
-3. Publishes `@zenchi-zenno/*` to npm
+3. Publishes `@zenchi-zenno/*` to npm via **Trusted Publishing (OIDC)** with provenance — no `NPM_TOKEN` secret is used
 4. Creates a GitHub Release and git tag
+
+Publishing requires a Trusted Publisher (GitHub Actions → `release.yml`) configured for each `@zenchi-zenno/*` package on npmjs.com, and pnpm 11+ / Node 22.14+ in CI.
 
 Contributors do **not** publish packages under `@zenchi-zenno` without maintainership. See [GOVERNANCE.md](GOVERNANCE.md).
 

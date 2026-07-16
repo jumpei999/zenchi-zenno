@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "description": "Canonical knowledge operating system — Personal MVP",
   "license": "MIT",
-  "packageManager": "pnpm@9.15.0",
+  "packageManager": "pnpm@11.5.3",
   "scripts": {
     "build": "pnpm -r run build",
     "zenchi": "node packages/cli/dist/index.js",

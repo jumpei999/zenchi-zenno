@@ -21,7 +21,8 @@ module.exports = {
       {
         prepareCmd:
           'pnpm -r exec npm version ${nextRelease.version} --no-git-tag-version && npm version ${nextRelease.version} --no-git-tag-version',
-        publishCmd: 'pnpm -r publish --access public --no-git-checks',
+        publishCmd:
+          'pnpm -r publish --access public --no-git-checks --provenance',
       },
     ],
     [

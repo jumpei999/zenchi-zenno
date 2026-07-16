@@ -29,9 +29,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: pnpm
-          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -42,9 +41,11 @@ jobs:
       - name: Test
         run: pnpm test
 
+      # Publishing uses npm Trusted Publishing (OIDC): pnpm 11 exchanges the
+      # id-token for a short-lived npm credential per package, so no NPM_TOKEN
+      # secret is needed. Requires `id-token: write` above and a Trusted
+      # Publisher configured for each @zenchi-zenno/* package on npmjs.com.
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: pnpm release
