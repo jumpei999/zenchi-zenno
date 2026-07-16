@@ -21,7 +21,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # PAT (repo secret) so @semantic-release/git can push version commits
+          # past the main ruleset; default GITHUB_TOKEN cannot bypass.
           persist-credentials: true
+          token: ${{ secrets.RELEASE_GITHUB_TOKEN }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -46,9 +49,11 @@ jobs:
       # secret is needed. Requires `id-token: write` above and a Trusted
       # Publisher configured for each @zenchi-zenno/* package on npmjs.com.
       # HUSKY=0 skips local hooks; DCO sign-off is in release.config.cjs.
+      # RELEASE_GITHUB_TOKEN: fine-grained PAT (Token name zenchi-zenno-release)
+      # whose owner is Exempt on the main ruleset Bypass list.
       - name: Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN }}
           HUSKY: 0
           GIT_AUTHOR_NAME: github-actions[bot]
           GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com

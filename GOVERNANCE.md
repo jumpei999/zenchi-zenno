@@ -60,7 +60,7 @@ Changes that move features between OSS and commercial, or change the OSS license
 | Phase 1+          | SemVer for packages; `CHANGELOG.md` for user-visible changes   |
 | Breaking ontology | Major version bump + migration notes                           |
 
-Releases are **automated** by [semantic-release](https://semantic-release.gitbook.io/) on merge to `main` (Conventional Commits → version bump, `CHANGELOG.md`, GitHub Release, npm publish). Publishing uses npm **Trusted Publishing (OIDC)** — no long-lived `NPM_TOKEN` is stored; the release workflow exchanges a short-lived GitHub Actions identity for a per-package npm credential. Maintainers own the pipeline (branch protection, npm Trusted Publisher configuration, npm scope). Contributors do not publish packages under `@zenchi-zenno` without maintainership.
+Releases are **automated** by [semantic-release](https://semantic-release.gitbook.io/) on merge to `main` (Conventional Commits → version bump, `CHANGELOG.md`, GitHub Release, npm publish). Publishing uses npm **Trusted Publishing (OIDC)** — no long-lived `NPM_TOKEN` is stored; the release workflow exchanges a short-lived GitHub Actions identity for a per-package npm credential. Version commits pushed by `@semantic-release/git` use the `RELEASE_GITHUB_TOKEN` secret (PAT `zenchi-zenno-release`) with the PAT owner **Exempt** on the `main` ruleset. Maintainers own the pipeline (branch protection / ruleset bypass, npm Trusted Publisher configuration, npm scope). Contributors do not publish packages under `@zenchi-zenno` without maintainership.
 
 ---
 
