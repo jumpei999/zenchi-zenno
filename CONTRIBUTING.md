@@ -109,16 +109,18 @@ You do not need to pass `-s` manually unless hooks are bypassed (`git commit --n
 
 ## Releases
 
-Maintainers merge to `main`. [semantic-release](https://semantic-release.gitbook.io/) then:
+Maintainers trigger [semantic-release](https://semantic-release.gitbook.io/) via **Actions → Release → Run workflow** (`workflow_dispatch` only; push to `main` does not publish). It then:
 
 1. Determines the next SemVer from Conventional Commits
 2. Updates `CHANGELOG.md` and package versions (locked across the monorepo)
 3. Publishes `@zenchi-zenno/*` to npm via **Trusted Publishing (OIDC)** with provenance — no `NPM_TOKEN` secret is used
 4. Creates a GitHub Release and git tag
 
-Publishing requires a Trusted Publisher (GitHub Actions → `release.yml`) configured for each `@zenchi-zenno/*` package on npmjs.com, and pnpm 11+ / Node 22.14+ in CI.
+Publishing requires a Trusted Publisher (GitHub Actions → `release.yml`) configured for each `@zenchi-zenno/*` package on npmjs.com **before the first release of that package**, and pnpm 11+ / Node 22.14+ in CI.
 
 `@semantic-release/git` pushes version bump commits directly to `main`. Maintainers must configure a fine-grained PAT (Token name `zenchi-zenno-release`) as the Actions secret `RELEASE_GITHUB_TOKEN`, and set that PAT owner to **Exempt** on the `main` ruleset Bypass list (the default `GITHUB_TOKEN` cannot bypass required PRs / status checks).
+
+An accidental `1.0.0` publish was yanked from npm. Those package names **cannot reuse `1.0.0`** on the registry; a future GA should use `1.0.1` (or later). Current line is `0.x` (baseline tag `v0.1.0`). While on `0.x`, breaking changes bump **minor** so semantic-release does not jump to `1.0.0` again.
 
 Contributors do **not** publish packages under `@zenchi-zenno` without maintainership. See [GOVERNANCE.md](GOVERNANCE.md).
 
