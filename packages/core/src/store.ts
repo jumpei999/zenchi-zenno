@@ -1,5 +1,12 @@
-import { mkdirSync, appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import {
+  appendFileSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+} from 'node:fs';
+import { dirname, join } from 'node:path';
+import { newId, nowIso } from './ids.js';
 import type {
   DomainEvent,
   Entity,
@@ -8,8 +15,7 @@ import type {
   Relation,
   SourceRecord,
   WorkspaceMeta,
-} from "./types.js";
-import { newId, nowIso } from "./ids.js";
+} from './types.js';
 
 export interface StoreSnapshot {
   workspace: WorkspaceMeta;
@@ -24,26 +30,26 @@ export interface StoreSnapshot {
 
 export class KnowledgeStore {
   readonly root: string;
-  private eventsPath: string;
-  private statePath: string;
-  private objectsDir: string;
+  private readonly eventsPath: string;
+  private readonly statePath: string;
+  private readonly objectsDir: string;
   private state: StoreSnapshot;
 
   constructor(root: string) {
     this.root = root;
-    this.eventsPath = join(root, "events.jsonl");
-    this.statePath = join(root, "state.json");
-    this.objectsDir = join(root, "objects");
+    this.eventsPath = join(root, 'events.jsonl');
+    this.statePath = join(root, 'state.json');
+    this.objectsDir = join(root, 'objects');
     this.state = this.loadOrEmpty();
   }
 
-  static init(root: string, name = "personal"): KnowledgeStore {
-    mkdirSync(join(root, "objects"), { recursive: true });
+  static init(root: string, name = 'personal'): KnowledgeStore {
+    mkdirSync(join(root, 'objects'), { recursive: true });
     const store = new KnowledgeStore(root);
     if (!existsSync(store.statePath)) {
       const workspace: WorkspaceMeta = {
         id: newId(),
-        kind: "personal",
+        kind: 'personal',
         name,
         created_at: nowIso(),
       };
@@ -86,9 +92,9 @@ export class KnowledgeStore {
     if (!existsSync(this.statePath)) {
       return {
         workspace: {
-          id: "uninitialized",
-          kind: "personal",
-          name: "uninitialized",
+          id: 'uninitialized',
+          kind: 'personal',
+          name: 'uninitialized',
           created_at: nowIso(),
         },
         events: [],
@@ -100,16 +106,16 @@ export class KnowledgeStore {
         observation_keys: [],
       };
     }
-    return JSON.parse(readFileSync(this.statePath, "utf8")) as StoreSnapshot;
+    return JSON.parse(readFileSync(this.statePath, 'utf8')) as StoreSnapshot;
   }
 
   private persist(): void {
     mkdirSync(dirname(this.statePath), { recursive: true });
-    writeFileSync(this.statePath, JSON.stringify(this.state, null, 2), "utf8");
+    writeFileSync(this.statePath, JSON.stringify(this.state, null, 2), 'utf8');
   }
 
   appendEvent(
-    type: DomainEvent["type"],
+    type: DomainEvent['type'],
     payload: Record<string, unknown>,
     opts?: { correlation_id?: string; causation_id?: string; actor?: string },
   ): DomainEvent {
@@ -120,13 +126,13 @@ export class KnowledgeStore {
       occurred_at: nowIso(),
       correlation_id: opts?.correlation_id,
       causation_id: opts?.causation_id,
-      actor: opts?.actor ?? "system",
+      actor: opts?.actor ?? 'system',
       payload,
-      schema_version: "0.1.0",
+      schema_version: '0.1.0',
     };
     this.state.events.push(event);
     mkdirSync(dirname(this.eventsPath), { recursive: true });
-    appendFileSync(this.eventsPath, `${JSON.stringify(event)}\n`, "utf8");
+    appendFileSync(this.eventsPath, `${JSON.stringify(event)}\n`, 'utf8');
     this.persist();
     return event;
   }
@@ -143,11 +149,16 @@ export class KnowledgeStore {
     return this.state.observation_keys.includes(key);
   }
 
-  storeSourceRecord(body: string, source_native_id: string, checksum: string, media_type?: string): SourceRecord {
+  storeSourceRecord(
+    body: string,
+    source_native_id: string,
+    checksum: string,
+    media_type?: string,
+  ): SourceRecord {
     const id = newId();
     const content_ref = join(this.objectsDir, `${id}.txt`);
     mkdirSync(this.objectsDir, { recursive: true });
-    writeFileSync(content_ref, body, "utf8");
+    writeFileSync(content_ref, body, 'utf8');
     const record: SourceRecord = {
       id,
       workspace_id: this.state.workspace.id,
@@ -159,7 +170,7 @@ export class KnowledgeStore {
       stored_at: nowIso(),
     };
     this.state.source_records.push(record);
-    this.appendEvent("SourceRecordStored", {
+    this.appendEvent('SourceRecordStored', {
       record_id: id,
       content_ref,
       checksum,
@@ -168,8 +179,16 @@ export class KnowledgeStore {
     return record;
   }
 
-  ingestObservation(obs: Omit<Observation, "workspace_id" | "ingested_at"> & { ingested_at?: string }): Observation | null {
-    const key = this.observationKey(obs.source_system, obs.source_native_id, obs.checksum);
+  ingestObservation(
+    obs: Omit<Observation, 'workspace_id' | 'ingested_at'> & {
+      ingested_at?: string;
+    },
+  ): Observation | null {
+    const key = this.observationKey(
+      obs.source_system,
+      obs.source_native_id,
+      obs.checksum,
+    );
     if (this.hasObservationKey(key)) {
       return null;
     }
@@ -180,7 +199,7 @@ export class KnowledgeStore {
     };
     this.state.observations.push(full);
     this.state.observation_keys.push(key);
-    this.appendEvent("ObservationIngested", {
+    this.appendEvent('ObservationIngested', {
       observation_id: full.id,
       source_type: full.source_type,
       source_native_id: full.source_native_id,
@@ -193,7 +212,7 @@ export class KnowledgeStore {
     const idx = this.state.entities.findIndex((e) => e.id === entity.id);
     if (idx >= 0) this.state.entities[idx] = entity;
     else this.state.entities.push(entity);
-    this.appendEvent("EntityUpserted", {
+    this.appendEvent('EntityUpserted', {
       entity_id: entity.id,
       type: entity.type,
       confirmation_state: entity.confirmation_state,
@@ -205,7 +224,7 @@ export class KnowledgeStore {
     const idx = this.state.relations.findIndex((r) => r.id === relation.id);
     if (idx >= 0) this.state.relations[idx] = relation;
     else this.state.relations.push(relation);
-    this.appendEvent("RelationUpserted", {
+    this.appendEvent('RelationUpserted', {
       relation_id: relation.id,
       predicate: relation.predicate,
       from_id: relation.from_id,
@@ -229,26 +248,29 @@ export class KnowledgeStore {
     return this.state.entities.find((e) => e.id === id);
   }
 
-  setConfirmation(entityId: string, state: "confirmed" | "rejected"): Entity | undefined {
+  setConfirmation(
+    entityId: string,
+    state: 'confirmed' | 'rejected',
+  ): Entity | undefined {
     const entity = this.getEntity(entityId);
     if (!entity) return undefined;
-    if (state === "confirmed") {
-      entity.confirmation_state = "confirmed";
+    if (state === 'confirmed') {
+      entity.confirmation_state = 'confirmed';
       entity.updated_at = nowIso();
       this.upsertEntity(entity);
-      this.appendEvent("HypothesisConfirmed", {
+      this.appendEvent('HypothesisConfirmed', {
         entity_id: entity.id,
-        confirmed_by: "cli",
+        confirmed_by: 'cli',
       });
     } else {
-      entity.confirmation_state = "archived";
-      entity.status = entity.type === "Decision" ? "retracted" : "discarded";
+      entity.confirmation_state = 'archived';
+      entity.status = entity.type === 'Decision' ? 'retracted' : 'discarded';
       entity.updated_at = nowIso();
       this.upsertEntity(entity);
-      this.appendEvent("HypothesisRejected", {
+      this.appendEvent('HypothesisRejected', {
         entity_id: entity.id,
-        rejected_by: "cli",
-        reason: "user_rejected",
+        rejected_by: 'cli',
+        reason: 'user_rejected',
       });
     }
     return entity;

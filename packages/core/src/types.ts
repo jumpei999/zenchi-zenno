@@ -1,14 +1,14 @@
 /** Canonical knowledge types for zenchi-zenno Personal MVP. */
 
-export type EntityType = "Decision" | "Idea" | "Artifact" | "Event";
+export type EntityType = 'Decision' | 'Idea' | 'Artifact' | 'Event';
 
 export type ConfirmationState =
-  | "hypothesized"
-  | "confirmed"
-  | "disputed"
-  | "archived";
+  | 'hypothesized'
+  | 'confirmed'
+  | 'disputed'
+  | 'archived';
 
-export type Sensitivity = "private" | "shareable" | "restricted";
+export type Sensitivity = 'private' | 'shareable' | 'restricted';
 
 export interface Provenance {
   extractor?: string;
@@ -98,20 +98,20 @@ export interface Evidence {
 }
 
 export type DomainEventType =
-  | "SourceConnectionRegistered"
-  | "SyncStarted"
-  | "SyncCompleted"
-  | "SyncFailed"
-  | "SourceRecordStored"
-  | "ObservationIngested"
-  | "ClaimsExtracted"
-  | "EntityUpserted"
-  | "RelationUpserted"
-  | "HypothesisConfirmed"
-  | "HypothesisRejected"
-  | "EntitiesMerged"
-  | "ProjectionRebuilt"
-  | "ReasoningEpisodeRecorded";
+  | 'SourceConnectionRegistered'
+  | 'SyncStarted'
+  | 'SyncCompleted'
+  | 'SyncFailed'
+  | 'SourceRecordStored'
+  | 'ObservationIngested'
+  | 'ClaimsExtracted'
+  | 'EntityUpserted'
+  | 'RelationUpserted'
+  | 'HypothesisConfirmed'
+  | 'HypothesisRejected'
+  | 'EntitiesMerged'
+  | 'ProjectionRebuilt'
+  | 'ReasoningEpisodeRecorded';
 
 export interface DomainEvent {
   id: string;
@@ -127,7 +127,7 @@ export interface DomainEvent {
 
 export interface WorkspaceMeta {
   id: string;
-  kind: "personal" | "project";
+  kind: 'personal' | 'project';
   name: string;
   created_at: string;
 }

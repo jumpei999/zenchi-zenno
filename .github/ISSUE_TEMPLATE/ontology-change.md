@@ -1,7 +1,7 @@
 ---
 name: Ontology change
 about: Propose a change to zenchi-zenno knowledge model or ubiquitous language
-title: "[Ontology] "
+title: '[Ontology] '
 labels: ontology
 ---
 

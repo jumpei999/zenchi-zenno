@@ -39,49 +39,49 @@ DomainEvent {
 
 ### Connection and sync
 
-| Event | Payload highlights | Emitted by |
-|-------|-------------------|------------|
-| `SourceConnectionRegistered` | `connection_id`, `source_system`, `transport` | Admin / setup |
-| `SourceConnectionUpdated` | `connection_id`, changed fields | Admin / setup |
-| `SyncStarted` | `connection_id`, `cursor_before` | Ingestion orchestrator |
-| `SyncCompleted` | `connection_id`, `cursor_after`, `observation_count` | Ingestion orchestrator |
-| `SyncFailed` | `connection_id`, `error`, `cursor` | Ingestion orchestrator |
-| `SyncCursorAdvanced` | `connection_id`, `cursor` | Connector |
+| Event                        | Payload highlights                                   | Emitted by             |
+| ---------------------------- | ---------------------------------------------------- | ---------------------- |
+| `SourceConnectionRegistered` | `connection_id`, `source_system`, `transport`        | Admin / setup          |
+| `SourceConnectionUpdated`    | `connection_id`, changed fields                      | Admin / setup          |
+| `SyncStarted`                | `connection_id`, `cursor_before`                     | Ingestion orchestrator |
+| `SyncCompleted`              | `connection_id`, `cursor_after`, `observation_count` | Ingestion orchestrator |
+| `SyncFailed`                 | `connection_id`, `error`, `cursor`                   | Ingestion orchestrator |
+| `SyncCursorAdvanced`         | `connection_id`, `cursor`                            | Connector              |
 
 ### Raw storage and observation
 
-| Event | Payload highlights | Emitted by |
-|-------|-------------------|------------|
-| `SourceRecordStored` | `record_id`, `content_ref`, `checksum`, `source_native_id` | Ingestion |
-| `ObservationIngested` | `observation_id`, `source_type`, `source_native_id`, `checksum` | Ingestion |
-| `ObservationSuperseded` | `observation_id`, `superseded_by` | Ingestion (revision) |
+| Event                   | Payload highlights                                              | Emitted by           |
+| ----------------------- | --------------------------------------------------------------- | -------------------- |
+| `SourceRecordStored`    | `record_id`, `content_ref`, `checksum`, `source_native_id`      | Ingestion            |
+| `ObservationIngested`   | `observation_id`, `source_type`, `source_native_id`, `checksum` | Ingestion            |
+| `ObservationSuperseded` | `observation_id`, `superseded_by`                               | Ingestion (revision) |
 
 ### Extraction and knowledge mutation
 
-| Event | Payload highlights | Emitted by |
-|-------|-------------------|------------|
-| `ClaimsExtracted` | `observation_ids[]`, `claim_count`, `extractor_version` | Extractor |
-| `EntityUpserted` | `entity_id`, `type`, `confirmation_state`, `diff_summary` | Knowledge service |
-| `RelationUpserted` | `relation_id`, `predicate`, `from_id`, `to_id` | Knowledge service |
-| `EntityArchived` | `entity_id`, `reason` | Curation |
-| `EntitySuperseded` | `entity_id`, `superseded_by` | Curation / extraction |
+| Event              | Payload highlights                                        | Emitted by            |
+| ------------------ | --------------------------------------------------------- | --------------------- |
+| `ClaimsExtracted`  | `observation_ids[]`, `claim_count`, `extractor_version`   | Extractor             |
+| `EntityUpserted`   | `entity_id`, `type`, `confirmation_state`, `diff_summary` | Knowledge service     |
+| `RelationUpserted` | `relation_id`, `predicate`, `from_id`, `to_id`            | Knowledge service     |
+| `EntityArchived`   | `entity_id`, `reason`                                     | Curation              |
+| `EntitySuperseded` | `entity_id`, `superseded_by`                              | Curation / extraction |
 
 ### Curation and confirmation
 
-| Event | Payload highlights | Emitted by |
-|-------|-------------------|------------|
-| `HypothesisConfirmed` | `entity_id` or `relation_id`, `confirmed_by` | Curation |
-| `HypothesisRejected` | `entity_id` or `relation_id`, `rejected_by`, `reason` | Curation |
-| `EntitiesMerged` | `survivor_id`, `merged_ids[]`, `merged_by` | Curation |
-| `DisputeRaised` | `entity_ids[]`, `reason` | System or user |
-| `DisputeResolved` | `resolution`, `resolved_by` | Curation |
+| Event                 | Payload highlights                                    | Emitted by     |
+| --------------------- | ----------------------------------------------------- | -------------- |
+| `HypothesisConfirmed` | `entity_id` or `relation_id`, `confirmed_by`          | Curation       |
+| `HypothesisRejected`  | `entity_id` or `relation_id`, `rejected_by`, `reason` | Curation       |
+| `EntitiesMerged`      | `survivor_id`, `merged_ids[]`, `merged_by`            | Curation       |
+| `DisputeRaised`       | `entity_ids[]`, `reason`                              | System or user |
+| `DisputeResolved`     | `resolution`, `resolved_by`                           | Curation       |
 
 ### Projections and cognition
 
-| Event | Payload highlights | Emitted by |
-|-------|-------------------|------------|
-| `ProjectionRebuilt` | `projection_type`, `entity_count`, `duration_ms` | Projection worker |
-| `ProjectionStale` | `projection_type`, `reason` | Monitor |
+| Event                      | Payload highlights                                        | Emitted by        |
+| -------------------------- | --------------------------------------------------------- | ----------------- |
+| `ProjectionRebuilt`        | `projection_type`, `entity_count`, `duration_ms`          | Projection worker |
+| `ProjectionStale`          | `projection_type`, `reason`                               | Monitor           |
 | `ReasoningEpisodeRecorded` | `episode_id`, `entity_refs[]`, `evidence_refs[]`, `query` | Reasoning service |
 
 ---
@@ -165,10 +165,10 @@ Snapshots are an optimization. The event log remains the audit source of truth.
 
 ## Correlation and causation
 
-| Field | Use |
-|-------|-----|
-| `correlation_id` | Tie all events in one sync run or user action |
-| `causation_id` | Point to the event that directly caused this one |
+| Field            | Use                                              |
+| ---------------- | ------------------------------------------------ |
+| `correlation_id` | Tie all events in one sync run or user action    |
+| `causation_id`   | Point to the event that directly caused this one |
 
 Example chain:
 
@@ -181,12 +181,12 @@ ObservationIngested → ClaimsExtracted → EntityUpserted → HypothesisConfirm
 
 ## Domain Event vs Event entity
 
-| | Domain Event | Event entity |
-|---|--------------|--------------|
-| Layer | System log | Knowledge graph |
-| Example | `ObservationIngested` | "Sprint planning 2026-07-15" |
-| Created by | Ingestion / services | Extraction + Confirmation |
-| Query use | Audit, replay, debug | User questions, timelines |
+|            | Domain Event          | Event entity                 |
+| ---------- | --------------------- | ---------------------------- |
+| Layer      | System log            | Knowledge graph              |
+| Example    | `ObservationIngested` | "Sprint planning 2026-07-15" |
+| Created by | Ingestion / services  | Extraction + Confirmation    |
+| Query use  | Audit, replay, debug  | User questions, timelines    |
 
 ---
 

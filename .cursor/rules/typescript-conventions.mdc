@@ -1,0 +1,18 @@
+---
+description: TypeScript style for zenchi-zenno packages and connectors
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# TypeScript conventions
+
+- Follow Biome (`pnpm check` / `pnpm check:fix`). Do not hand-format against it.
+- ESM with NodeNext: use `.js` extensions in relative imports (`./types.js`).
+- Prefer `import type` for type-only imports.
+- Domain / ontology fields: **snake_case** (`workspace_id`, `source_system`, `has_more`).
+- Functions / locals: **camelCase** (`createMarkdownLocalConnector`, `openStore`).
+- Types / interfaces / classes: **PascalCase** (`KnowledgeStore`, `SyncResult`).
+- Connectors: export a factory `createXConnector(): Connector`; implement via `connector-spi`.
+- Prefer small focused modules; re-export public API from package `src/index.ts`.
+- Do not use `any`; narrow with typed drafts (`ObservationDraft`) or explicit casts only at boundaries.
+- Tests: colocated `*.test.ts`, run via `node --test` on compiled `dist`.

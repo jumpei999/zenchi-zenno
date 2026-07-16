@@ -1,6 +1,6 @@
-import type { Observation, SourceRecord } from "@zenchi-zenno/core";
+import type { Observation } from '@zenchi-zenno/core';
 
-export type Transport = "api" | "export" | "mcp";
+export type Transport = 'api' | 'export' | 'mcp';
 
 export interface ConnectorMetadata {
   id: string;
@@ -30,7 +30,10 @@ export interface SyncResult {
 }
 
 /** Observation before workspace_id / ingested_at are assigned by the store. */
-export type ObservationDraft = Omit<Observation, "workspace_id" | "ingested_at"> & {
+export type ObservationDraft = Omit<
+  Observation,
+  'workspace_id' | 'ingested_at'
+> & {
   workspace_id?: string;
   ingested_at?: string;
 };
@@ -46,8 +49,14 @@ export type SourceRecordDraft = {
 export interface Connector {
   metadata(): ConnectorMetadata;
   capabilities(): Capabilities;
-  authenticate?(credentials: Record<string, string>): Promise<{ ok: boolean; error?: string }>;
-  sync(input: { path?: string; cursor?: SyncCursor; workspace_id: string }): Promise<SyncResult>;
+  authenticate?(
+    credentials: Record<string, string>,
+  ): Promise<{ ok: boolean; error?: string }>;
+  sync(input: {
+    path?: string;
+    cursor?: SyncCursor;
+    workspace_id: string;
+  }): Promise<SyncResult>;
   health?(): Promise<{ ok: boolean; detail?: string }>;
 }
 

@@ -1,7 +1,7 @@
 ---
 name: Connector request
 about: Propose a new source connector for zenchi-zenno
-title: "[Connector] "
+title: '[Connector] '
 labels: connector
 ---
 
@@ -24,16 +24,16 @@ labels: connector
 <!-- What source_type values would this connector produce? e.g. code.change, chat.thread -->
 
 | Source object | observation.source_type | Notes |
-|---------------|-------------------------|-------|
-| | | |
+| ------------- | ----------------------- | ----- |
+|               |                         |       |
 
 ## Entity mapping (candidates)
 
 <!-- What entity types might extraction target? Remember: connectors produce Observations only. -->
 
 | Observation | Likely entities (hypothesis) |
-|-------------|------------------------------|
-| | |
+| ----------- | ---------------------------- |
+|             |                              |
 
 ## Authentication and limits
 

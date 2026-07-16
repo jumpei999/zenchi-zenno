@@ -10,11 +10,11 @@ Service Provider Interface for ingesting knowledge from heterogeneous sources.
 
 Connectors are **adapters**. The SPI is transport-agnostic:
 
-| Transport | Examples |
-|-----------|----------|
-| **API** | GitHub REST/GraphQL, Google APIs, Slack Web API |
-| **Export** | ChatGPT JSON export, Takeout, archive bundles |
-| **MCP** | External MCP server resources and tools |
+| Transport  | Examples                                        |
+| ---------- | ----------------------------------------------- |
+| **API**    | GitHub REST/GraphQL, Google APIs, Slack Web API |
+| **Export** | ChatGPT JSON export, Takeout, archive bundles   |
+| **MCP**    | External MCP server resources and tools         |
 
 MCP implements the same SPI as API and Export. The domain never branches on transport type.
 
@@ -56,31 +56,31 @@ interface Connector {
 
 ### `ConnectorMetadata`
 
-| Field | Description |
-|-------|-------------|
-| `id` | Stable connector identifier (e.g. `github`, `chatgpt-export`) |
-| `version` | Connector implementation version |
-| `source_system` | Canonical source name stored on Observations |
-| `supported_transports` | `api`, `export`, `mcp` |
+| Field                  | Description                                                   |
+| ---------------------- | ------------------------------------------------------------- |
+| `id`                   | Stable connector identifier (e.g. `github`, `chatgpt-export`) |
+| `version`              | Connector implementation version                              |
+| `source_system`        | Canonical source name stored on Observations                  |
+| `supported_transports` | `api`, `export`, `mcp`                                        |
 
 ### `Capabilities`
 
-| Flag | Description |
-|------|-------------|
-| `incremental` | Supports cursor-based incremental sync |
-| `webhook` | Can receive push notifications |
-| `export_only` | No live API; file-based only |
-| `realtime` | Sub-minute latency possible |
-| `observation_types` | List of `source_type` values produced |
+| Flag                | Description                            |
+| ------------------- | -------------------------------------- |
+| `incremental`       | Supports cursor-based incremental sync |
+| `webhook`           | Can receive push notifications         |
+| `export_only`       | No live API; file-based only           |
+| `realtime`          | Sub-minute latency possible            |
+| `observation_types` | List of `source_type` values produced  |
 
 ### `SyncResult`
 
-| Field | Description |
-|-------|-------------|
+| Field          | Description                      |
+| -------------- | -------------------------------- |
 | `observations` | Batch of normalized Observations |
-| `cursor` | Opaque cursor for next sync |
-| `has_more` | Pagination flag |
-| `errors` | Non-fatal per-item errors |
+| `cursor`       | Opaque cursor for next sync      |
+| `has_more`     | Pagination flag                  |
+| `errors`       | Non-fatal per-item errors        |
 
 ---
 
@@ -103,10 +103,10 @@ stateDiagram-v2
 
 Every Observation produced by a connector must include:
 
-| Field | Purpose |
-|-------|---------|
-| `source_system` | From metadata |
-| `source_native_id` | Stable ID in source |
+| Field              | Purpose                    |
+| ------------------ | -------------------------- |
+| `source_system`    | From metadata              |
+| `source_native_id` | Stable ID in source        |
 | `content_checksum` | Hash of normalized content |
 
 The ingestion layer deduplicates on:
@@ -159,13 +159,13 @@ sequenceDiagram
 
 zenchi-zenno may expose an MCP server for agent clients. Planned tools:
 
-| Tool | Description |
-|------|-------------|
-| `search_entities` | Full-text and filter search over canonical entities |
-| `get_entity` | Fetch entity by ID with relations |
-| `get_decision_trace` | Walk Decision graph with evidence |
-| `list_evidence` | Evidence and Observations for an entity |
-| `list_hypotheses` | Pending hypotheses for confirmation |
+| Tool                 | Description                                         |
+| -------------------- | --------------------------------------------------- |
+| `search_entities`    | Full-text and filter search over canonical entities |
+| `get_entity`         | Fetch entity by ID with relations                   |
+| `get_decision_trace` | Walk Decision graph with evidence                   |
+| `list_evidence`      | Evidence and Observations for an entity             |
+| `list_hypotheses`    | Pending hypotheses for confirmation                 |
 
 Egress MCP tools operate on **canonical knowledge**, not raw connector internals.
 
@@ -173,12 +173,12 @@ Egress MCP tools operate on **canonical knowledge**, not raw connector internals
 
 ## Error handling
 
-| Error class | Behavior |
-|-------------|----------|
-| Auth failure | `SyncFailed`, connection marked `auth_error` |
-| Rate limit | Retry with backoff, partial `SyncResult` allowed |
-| Item parse error | Log in `errors[]`, continue batch |
-| Total failure | `SyncFailed`, cursor not advanced |
+| Error class      | Behavior                                         |
+| ---------------- | ------------------------------------------------ |
+| Auth failure     | `SyncFailed`, connection marked `auth_error`     |
+| Rate limit       | Retry with backoff, partial `SyncResult` allowed |
+| Item parse error | Log in `errors[]`, continue batch                |
+| Total failure    | `SyncFailed`, cursor not advanced                |
 
 ---
 

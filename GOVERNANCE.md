@@ -16,11 +16,11 @@ As the community grows, this document may add a maintainer committee and voting 
 
 ## Roles
 
-| Role | Responsibilities |
-|------|------------------|
-| **Maintainer** | Merge rights, release tagging, ontology stewardship, commercial-boundary integrity |
-| **Contributor** | PRs, issues, docs, connectors (under CONTRIBUTING) |
-| **RFC author** | Proposes material changes to ontology, SPI, license strategy, or commercial boundary |
+| Role            | Responsibilities                                                                     |
+| --------------- | ------------------------------------------------------------------------------------ |
+| **Maintainer**  | Merge rights, release tagging, ontology stewardship, commercial-boundary integrity   |
+| **Contributor** | PRs, issues, docs, connectors (under CONTRIBUTING)                                   |
+| **RFC author**  | Proposes material changes to ontology, SPI, license strategy, or commercial boundary |
 
 ---
 
@@ -54,11 +54,11 @@ Changes that move features between OSS and commercial, or change the OSS license
 
 ## Release policy
 
-| Phase | Release shape |
-|-------|-------------|
-| Phase 0 | Documentation and schemas; no tagged runtime releases required |
-| Phase 1+ | SemVer for packages; `CHANGELOG.md` for user-visible changes |
-| Breaking ontology | Major version bump + migration notes |
+| Phase             | Release shape                                                  |
+| ----------------- | -------------------------------------------------------------- |
+| Phase 0           | Documentation and schemas; no tagged runtime releases required |
+| Phase 1+          | SemVer for packages; `CHANGELOG.md` for user-visible changes   |
+| Breaking ontology | Major version bump + migration notes                           |
 
 Releases are **automated** by [semantic-release](https://semantic-release.gitbook.io/) on merge to `main` (Conventional Commits → version bump, `CHANGELOG.md`, GitHub Release, npm publish). Publishing uses npm **Trusted Publishing (OIDC)** — no long-lived `NPM_TOKEN` is stored; the release workflow exchanges a short-lived GitHub Actions identity for a per-package npm credential. Maintainers own the pipeline (branch protection, npm Trusted Publisher configuration, npm scope). Contributors do not publish packages under `@zenchi-zenno` without maintainership.
 
@@ -66,10 +66,10 @@ Releases are **automated** by [semantic-release](https://semantic-release.gitboo
 
 ## Contributor agreements
 
-| Mechanism | When |
-|-----------|------|
+| Mechanism          | When                                                                        |
+| ------------------ | --------------------------------------------------------------------------- |
 | **[DCO 1.1](DCO)** | Default for early OSS (Phase 0–1). Sign-off via `Signed-off-by:` in commits |
-| **CLA** | May be introduced before Enterprise sales if customer legal requires it |
+| **CLA**            | May be introduced before Enterprise sales if customer legal requires it     |
 
 Until a CLA is published, DCO is sufficient.
 
@@ -77,12 +77,12 @@ Until a CLA is published, DCO is sufficient.
 
 ## Communication
 
-| Channel | Use |
-|---------|-----|
-| **GitHub Issues** | Bugs, connector requests, ontology proposals |
-| **GitHub Discussions** | Q&A, design brainstorming, roadmaps |
-| **Discord** (planned) | Real-time connector-developer chat |
-| **Office Hours** (planned) | Monthly; demos and Pro/Team orientation |
+| Channel                    | Use                                          |
+| -------------------------- | -------------------------------------------- |
+| **GitHub Issues**          | Bugs, connector requests, ontology proposals |
+| **GitHub Discussions**     | Q&A, design brainstorming, roadmaps          |
+| **Discord** (planned)      | Real-time connector-developer chat           |
+| **Office Hours** (planned) | Monthly; demos and Pro/Team orientation      |
 
 ---
 

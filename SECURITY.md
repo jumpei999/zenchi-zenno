@@ -4,11 +4,11 @@ zenchi-zenno is a local-first knowledge operating system. Security issues may af
 
 ## Supported versions
 
-| Version | Supported |
-|---------|-----------|
-| `main` (latest) | Yes |
+| Version         | Supported                                |
+| --------------- | ---------------------------------------- |
+| `main` (latest) | Yes                                      |
 | Tagged releases | Yes, until superseded by a newer release |
-| Older tags | Best-effort only |
+| Older tags      | Best-effort only                         |
 
 ## Reporting a vulnerability
 

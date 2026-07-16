@@ -27,15 +27,15 @@ This aligns with [ARCHITECTURE §7 Storage](ARCHITECTURE.md#7-storage-design) (e
 
 ## Open source (this repository)
 
-| Area | Includes | Rationale |
-|------|----------|-----------|
-| **Kernel** | Entity types, relations, event log contracts, idempotency | Trust and fork-resistant core |
-| **Connector SPI** | API / Export / MCP as peer transports | Ecosystem growth |
-| **Basic connectors** | ChatGPT export, GitHub (read-only / export), local Markdown | Personal “working” experience |
-| **Personal CLI** | `ingest`, `confirm`, `search`, `trace` | Personal Knowledge OS UX |
-| **Schemas** | [`schemas/`](../schemas/) | Interoperability |
-| **MCP egress (basic)** | `search_entities`, `get_decision_trace`, `list_evidence` | Agent interoperability |
-| **Docs & ontology** | Architecture, ubiquitous language, knowledge model | Community gravity |
+| Area                   | Includes                                                    | Rationale                     |
+| ---------------------- | ----------------------------------------------------------- | ----------------------------- |
+| **Kernel**             | Entity types, relations, event log contracts, idempotency   | Trust and fork-resistant core |
+| **Connector SPI**      | API / Export / MCP as peer transports                       | Ecosystem growth              |
+| **Basic connectors**   | ChatGPT export, GitHub (read-only / export), local Markdown | Personal “working” experience |
+| **Personal CLI**       | `ingest`, `confirm`, `search`, `trace`                      | Personal Knowledge OS UX      |
+| **Schemas**            | [`schemas/`](../schemas/)                                   | Interoperability              |
+| **MCP egress (basic)** | `search_entities`, `get_decision_trace`, `list_evidence`    | Agent interoperability        |
+| **Docs & ontology**    | Architecture, ubiquitous language, knowledge model          | Community gravity             |
 
 ---
 
@@ -43,15 +43,15 @@ This aligns with [ARCHITECTURE §7 Storage](ARCHITECTURE.md#7-storage-design) (e
 
 Shipped later as **managed offerings and/or a separate `zenchi-zenno-cloud` repository** — not as artificial limits on local OSS use.
 
-| Area | Includes | Why paid |
-|------|----------|----------|
-| **Team / Project Workspace** | Multi-user, shared Decision graph, mandatory review flows | Collaboration value ([ARCHITECTURE §5.9](ARCHITECTURE.md#59-personal--project-evolution)) |
-| **Managed Cloud** | Hosted sync, backup, multi-device | Ops cost + convenience |
-| **Enterprise Policy** | SSO/SAML, SCIM, ACL, audit log, retention, PII redaction | Compliance |
-| **Premium connectors** | Slack / Gmail / Drive live sync, high-frequency webhooks | API and maintenance cost |
-| **Premium extraction** | Higher-precision Decision extraction, dedup, identity resolution | LLM cost + tuning |
-| **Reasoning Audit Plus** | Long-term ReasoningEpisode retention, search, compliance reports | Enterprise accountability |
-| **SLA / Support** | Priority support, onboarding, custom connectors | B2B standard |
+| Area                         | Includes                                                         | Why paid                                                                                  |
+| ---------------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| **Team / Project Workspace** | Multi-user, shared Decision graph, mandatory review flows        | Collaboration value ([ARCHITECTURE §5.9](ARCHITECTURE.md#59-personal--project-evolution)) |
+| **Managed Cloud**            | Hosted sync, backup, multi-device                                | Ops cost + convenience                                                                    |
+| **Enterprise Policy**        | SSO/SAML, SCIM, ACL, audit log, retention, PII redaction         | Compliance                                                                                |
+| **Premium connectors**       | Slack / Gmail / Drive live sync, high-frequency webhooks         | API and maintenance cost                                                                  |
+| **Premium extraction**       | Higher-precision Decision extraction, dedup, identity resolution | LLM cost + tuning                                                                         |
+| **Reasoning Audit Plus**     | Long-term ReasoningEpisode retention, search, compliance reports | Enterprise accountability                                                                 |
+| **SLA / Support**            | Priority support, onboarding, custom connectors                  | B2B standard                                                                              |
 
 ---
 
@@ -59,12 +59,12 @@ Shipped later as **managed offerings and/or a separate `zenchi-zenno-cloud` repo
 
 Commercial differentiation maps to OSS differentiators ([ARCHITECTURE §9](ARCHITECTURE.md#9-oss-differentiation)):
 
-| Capability | Typical plan |
-|------------|--------------|
-| Decision archaeology with shared evidence chains | Team+ |
-| Team Hypothesis → Confirmation workflows | Team |
-| Cross-source linking (e.g. Git + Slack + Drive) | Pro+ |
-| ReasoningEpisode audit trails | Enterprise |
+| Capability                                       | Typical plan |
+| ------------------------------------------------ | ------------ |
+| Decision archaeology with shared evidence chains | Team+        |
+| Team Hypothesis → Confirmation workflows         | Team         |
+| Cross-source linking (e.g. Git + Slack + Drive)  | Pro+         |
+| ReasoningEpisode audit trails                    | Enterprise   |
 
 ---
 
@@ -72,12 +72,12 @@ Commercial differentiation maps to OSS differentiators ([ARCHITECTURE §9](ARCHI
 
 Not binding; for product and GTM alignment:
 
-| Plan | Audience | Indicative price | Includes |
-|------|----------|------------------|----------|
-| **Community** | Individuals | $0 | Full OSS, local, basic connectors |
-| **Pro** | Power users | $12–20 / user / mo | Cloud sync, extra connectors, faster extraction |
-| **Team** | Startups | $25–40 / user / mo | Project Workspace, shared confirmation, 30-day audit |
-| **Enterprise** | Companies | Custom | SSO, SCIM, unlimited audit, SLA, VPC options |
+| Plan           | Audience    | Indicative price   | Includes                                             |
+| -------------- | ----------- | ------------------ | ---------------------------------------------------- |
+| **Community**  | Individuals | $0                 | Full OSS, local, basic connectors                    |
+| **Pro**        | Power users | $12–20 / user / mo | Cloud sync, extra connectors, faster extraction      |
+| **Team**       | Startups    | $25–40 / user / mo | Project Workspace, shared confirmation, 30-day audit |
+| **Enterprise** | Companies   | Custom             | SSO, SCIM, unlimited audit, SLA, VPC options         |
 
 Japan: trial within ~0.8–1.2× of the above. Early revenue focus is **Team**; **Pro** bridges personal → team.
 

@@ -31,6 +31,9 @@ jobs:
         if: github.event_name == 'pull_request'
         run: pnpm commitlint --from origin/${{ github.base_ref }} --to HEAD --verbose
 
+      - name: Check format and lint
+        run: pnpm check
+
       - name: Build
         run: pnpm build
 

@@ -1,7 +1,12 @@
-import { readFileSync, statSync } from "node:fs";
-import { join } from "node:path";
-import { checksum, newId, nowIso } from "@zenchi-zenno/core";
-import type { Capabilities, Connector, ConnectorMetadata, SyncResult } from "@zenchi-zenno/connector-spi";
+import { readFileSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import type {
+  Capabilities,
+  Connector,
+  ConnectorMetadata,
+  SyncResult,
+} from '@zenchi-zenno/connector-spi';
+import { checksum, newId, nowIso } from '@zenchi-zenno/core';
 
 interface CommitExport {
   sha: string;
@@ -29,8 +34,8 @@ interface GithubExportFile {
 
 function loadExport(path: string): GithubExportFile {
   const st = statSync(path);
-  const file = st.isDirectory() ? join(path, "github-export.json") : path;
-  return JSON.parse(readFileSync(file, "utf8")) as GithubExportFile;
+  const file = st.isDirectory() ? join(path, 'github-export.json') : path;
+  return JSON.parse(readFileSync(file, 'utf8')) as GithubExportFile;
 }
 
 /**
@@ -41,10 +46,10 @@ export function createGithubConnector(): Connector {
   return {
     metadata(): ConnectorMetadata {
       return {
-        id: "github",
-        version: "0.1.0",
-        source_system: "github",
-        supported_transports: ["export", "api"],
+        id: 'github',
+        version: '0.1.0',
+        source_system: 'github',
+        supported_transports: ['export', 'api'],
       };
     },
     capabilities(): Capabilities {
@@ -53,7 +58,7 @@ export function createGithubConnector(): Connector {
         webhook: false,
         export_only: true,
         realtime: false,
-        observation_types: ["code.change", "code.review"],
+        observation_types: ['code.change', 'code.review'],
       };
     },
     async sync({ path, workspace_id }) {
@@ -65,7 +70,9 @@ export function createGithubConnector(): Connector {
         errors: [],
       };
       if (!path) {
-        result.errors.push({ message: "path is required for github export mode" });
+        result.errors.push({
+          message: 'path is required for github export mode',
+        });
         return result;
       }
       let data: GithubExportFile;
@@ -77,54 +84,54 @@ export function createGithubConnector(): Connector {
       }
 
       for (const c of data.commits ?? []) {
-        const body = `${c.message}\n\nauthor: ${c.author ?? "unknown"}\nrepo: ${c.repo ?? ""}`;
+        const body = `${c.message}\n\nauthor: ${c.author ?? 'unknown'}\nrepo: ${c.repo ?? ''}`;
         const sum = checksum(body);
         const observation = {
           id: newId(),
           workspace_id,
-          source_system: "github",
-          source_type: "code.change" as const,
+          source_system: 'github',
+          source_type: 'code.change' as const,
           source_native_id: c.sha,
           observed_at: c.date ?? nowIso(),
           actor: c.author ? { display_name: c.author } : undefined,
-          title: c.message.split("\n")[0],
+          title: c.message.split('\n')[0],
           text: body,
           pointers: { repo: c.repo, url: c.url },
-          content_ref: "",
+          content_ref: '',
           checksum: sum,
         };
         result.records.push({
           body,
           source_native_id: c.sha,
           checksum: sum,
-          media_type: "text/plain",
+          media_type: 'text/plain',
           observation,
         });
         result.observations.push(observation);
       }
 
       for (const pr of data.pull_requests ?? []) {
-        const body = `# PR #${pr.number}: ${pr.title}\n\n${pr.body ?? ""}\n\nmerged: ${pr.merged ?? false}`;
+        const body = `# PR #${pr.number}: ${pr.title}\n\n${pr.body ?? ''}\n\nmerged: ${pr.merged ?? false}`;
         const sum = checksum(body);
-        const nativeId = `${pr.repo ?? "repo"}#${pr.number}`;
+        const nativeId = `${pr.repo ?? 'repo'}#${pr.number}`;
         const observation = {
           id: newId(),
           workspace_id,
-          source_system: "github",
-          source_type: "code.review" as const,
+          source_system: 'github',
+          source_type: 'code.review' as const,
           source_native_id: nativeId,
           observed_at: pr.closed_at ?? nowIso(),
           title: pr.title,
           text: body,
           pointers: { repo: pr.repo, url: pr.url },
-          content_ref: "",
+          content_ref: '',
           checksum: sum,
         };
         result.records.push({
           body,
           source_native_id: nativeId,
           checksum: sum,
-          media_type: "text/plain",
+          media_type: 'text/plain',
           observation,
         });
         result.observations.push(observation);

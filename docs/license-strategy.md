@@ -9,12 +9,12 @@ Decision record for OSS licensing and the future commercial repository.
 
 ## Decision (Phase 0–1)
 
-| Item | Decision |
-|------|----------|
-| **Current OSS license** | **MIT** (retain) |
-| **Rationale** | Maximize early community adoption and contributor frictionlessness while architecture and Personal MVP ship |
-| **Commercial code** | Not in this repo yet; no revenue features in Phase 1 |
-| **Revisit gate** | Before implementing Team Workspace, managed sync SaaS, or Enterprise Policy |
+| Item                    | Decision                                                                                                    |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **Current OSS license** | **MIT** (retain)                                                                                            |
+| **Rationale**           | Maximize early community adoption and contributor frictionlessness while architecture and Personal MVP ship |
+| **Commercial code**     | Not in this repo yet; no revenue features in Phase 1                                                        |
+| **Revisit gate**        | Before implementing Team Workspace, managed sync SaaS, or Enterprise Policy                                 |
 
 ---
 
@@ -22,12 +22,12 @@ Decision record for OSS licensing and the future commercial repository.
 
 When Team / Cloud work begins, adopt the following **default plan** unless an RFC changes it:
 
-| Item | Planned choice | Why |
-|------|----------------|-----|
-| **OSS license migration** | **Apache License 2.0** | Enterprise-friendly; patent grant; common in cloud-native OSS; clearer contribution stories than MIT for companies |
-| **Alternative if SaaS freeloading is acute** | **AGPL-3.0** for network-facing OSS services | Stronger copyleft against closed SaaS rehosts of the OSS server |
-| **Commercial repo** | Separate **`zenchi-zenno-cloud`** | Keeps kernel open; clear Open Core boundary |
-| **Commercial license** | **BSL 1.1** (Change License → Apache after ~4 years) **or** proprietary | Room to charge for collaboration / ops without relicensing the OSS kernel mid-flight |
+| Item                                         | Planned choice                                                          | Why                                                                                                                |
+| -------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **OSS license migration**                    | **Apache License 2.0**                                                  | Enterprise-friendly; patent grant; common in cloud-native OSS; clearer contribution stories than MIT for companies |
+| **Alternative if SaaS freeloading is acute** | **AGPL-3.0** for network-facing OSS services                            | Stronger copyleft against closed SaaS rehosts of the OSS server                                                    |
+| **Commercial repo**                          | Separate **`zenchi-zenno-cloud`**                                       | Keeps kernel open; clear Open Core boundary                                                                        |
+| **Commercial license**                       | **BSL 1.1** (Change License → Apache after ~4 years) **or** proprietary | Room to charge for collaboration / ops without relicensing the OSS kernel mid-flight                               |
 
 **Preferred primary path:** Apache 2.0 (OSS) + BSL/proprietary (`zenchi-zenno-cloud`).
 
@@ -62,10 +62,10 @@ Never “paywalled kernel ontology.”
 
 ## Explicit non-decisions (deferred)
 
-| Topic | Deferred until |
-|-------|----------------|
-| Exact BSL change date | First cloud release |
-| CLA legal entity | First Enterprise design partner |
+| Topic                               | Deferred until                            |
+| ----------------------------------- | ----------------------------------------- |
+| Exact BSL change date               | First cloud release                       |
+| CLA legal entity                    | First Enterprise design partner           |
 | Trademark registration jurisdiction | After public launch and name confirmation |
 
 ---

@@ -1,6 +1,7 @@
 # Architecture review meeting
 
 Agenda:
+
 - Connector SPI review
 - Decision archaeology demo
 

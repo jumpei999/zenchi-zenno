@@ -2,7 +2,7 @@
 
 **zenchi-zenno — a canonical knowledge operating system**
 
-*全知全能の知識 OS へ — toward omniscient, actionable knowledge.*
+_全知全能の知識 OS へ — toward omniscient, actionable knowledge._
 
 [![Status](https://img.shields.io/badge/status-Phase%201--Personal%20MVP-blue)](#status)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -36,27 +36,27 @@ pnpm zenchi confirm --list
 
 ## Scope continuum
 
-| Phase | Focus |
-|-------|-------|
-| Now | Personal Knowledge OS (OSS, local-first) |
+| Phase  | Focus                                                     |
+| ------ | --------------------------------------------------------- |
+| Now    | Personal Knowledge OS (OSS, local-first)                  |
 | Future | Project Knowledge OS + optional Cloud / Team (commercial) |
 
 ## Documentation
 
-| Document | Description |
-|----------|-------------|
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Master architecture (11 sections) |
-| [docs/knowledge-model.md](docs/knowledge-model.md) | Entity types, relations, lifecycles |
-| [docs/event-model.md](docs/event-model.md) | Domain event catalog, idempotency |
-| [docs/connector-spi.md](docs/connector-spi.md) | Connector contract (API / Export / MCP) |
-| [docs/ubiquitous-language.md](docs/ubiquitous-language.md) | Glossary |
-| [docs/commercial-boundary.md](docs/commercial-boundary.md) | OSS vs commercial boundary |
-| [docs/license-strategy.md](docs/license-strategy.md) | MIT now; Apache + cloud repo at Phase 2 |
-| [GOVERNANCE.md](GOVERNANCE.md) | Project governance |
-| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community standards |
-| [SECURITY.md](SECURITY.md) | Vulnerability reporting |
-| [DCO](DCO) | Developer Certificate of Origin |
-| [TRADEMARK.md](TRADEMARK.md) | Trademark policy |
+| Document                                                   | Description                             |
+| ---------------------------------------------------------- | --------------------------------------- |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)               | Master architecture (11 sections)       |
+| [docs/knowledge-model.md](docs/knowledge-model.md)         | Entity types, relations, lifecycles     |
+| [docs/event-model.md](docs/event-model.md)                 | Domain event catalog, idempotency       |
+| [docs/connector-spi.md](docs/connector-spi.md)             | Connector contract (API / Export / MCP) |
+| [docs/ubiquitous-language.md](docs/ubiquitous-language.md) | Glossary                                |
+| [docs/commercial-boundary.md](docs/commercial-boundary.md) | OSS vs commercial boundary              |
+| [docs/license-strategy.md](docs/license-strategy.md)       | MIT now; Apache + cloud repo at Phase 2 |
+| [GOVERNANCE.md](GOVERNANCE.md)                             | Project governance                      |
+| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)                   | Community standards                     |
+| [SECURITY.md](SECURITY.md)                                 | Vulnerability reporting                 |
+| [DCO](DCO)                                                 | Developer Certificate of Origin         |
+| [TRADEMARK.md](TRADEMARK.md)                               | Trademark policy                        |
 
 ## Repository map
 

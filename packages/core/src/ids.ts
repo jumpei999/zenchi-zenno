@@ -1,4 +1,4 @@
-import { createHash, randomUUID } from "node:crypto";
+import { createHash, randomUUID } from 'node:crypto';
 
 export function newId(): string {
   return randomUUID();
@@ -9,9 +9,9 @@ export function nowIso(): string {
 }
 
 export function checksum(content: string): string {
-  return createHash("sha256").update(content, "utf8").digest("hex");
+  return createHash('sha256').update(content, 'utf8').digest('hex');
 }
 
 export function normalizeText(text: string): string {
-  return text.replace(/\s+/g, " ").trim().toLowerCase();
+  return text.replace(/\s+/g, ' ').trim().toLowerCase();
 }

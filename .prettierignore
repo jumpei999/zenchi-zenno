@@ -1,0 +1,16 @@
+dist
+node_modules
+.zenchi
+.review
+pnpm-lock.yaml
+*.ts
+*.tsx
+*.js
+*.jsx
+*.cjs
+*.mjs
+package.json
+**/package.json
+tsconfig*.json
+biome.json
+.prettierrc

@@ -1,6 +1,6 @@
-import type { Entity, Evidence, Observation, Relation } from "./types.js";
-import { newId, nowIso, normalizeText } from "./ids.js";
-import type { KnowledgeStore } from "./store.js";
+import { newId, normalizeText, nowIso } from './ids.js';
+import type { KnowledgeStore } from './store.js';
+import type { Entity, Evidence, Observation, Relation } from './types.js';
 
 export interface ExtractResult {
   entities: Entity[];
@@ -27,7 +27,10 @@ const IDEA_PATTERNS = [
 ];
 
 function titleFromText(text: string, fallback: string): string {
-  const line = text.split("\n").map((l) => l.trim()).find((l) => l.length > 0);
+  const line = text
+    .split('\n')
+    .map((l) => l.trim())
+    .find((l) => l.length > 0);
   if (!line) return fallback;
   return line.length > 80 ? `${line.slice(0, 77)}...` : line;
 }
@@ -44,36 +47,37 @@ export function extractFromObservation(
   store: KnowledgeStore,
   observation: Observation,
 ): ExtractResult {
-  const text = observation.text ?? observation.title ?? "";
+  const text = observation.text ?? observation.title ?? '';
   const entities: Entity[] = [];
   const relations: Relation[] = [];
   const evidence: Evidence[] = [];
   const ws = store.workspace.id;
   const ts = nowIso();
 
-  const ev = store.addEvidence(observation.id, "extracted_from_observation");
+  const ev = store.addEvidence(observation.id, 'extracted_from_observation');
   evidence.push(ev);
 
   // Always create an Artifact for document-like sources
   if (
-    observation.source_type === "doc.revision" ||
-    observation.source_type === "ai.conversation" ||
-    observation.source_type === "code.change" ||
-    observation.source_type === "code.review"
+    observation.source_type === 'doc.revision' ||
+    observation.source_type === 'ai.conversation' ||
+    observation.source_type === 'code.change' ||
+    observation.source_type === 'code.review'
   ) {
     const artifact: Entity = {
       id: newId(),
       workspace_id: ws,
-      type: "Artifact",
-      title: observation.title ?? titleFromText(text, observation.source_native_id),
+      type: 'Artifact',
+      title:
+        observation.title ?? titleFromText(text, observation.source_native_id),
       summary: text.slice(0, 280) || undefined,
-      status: "active",
+      status: 'active',
       confidence: 0.9,
-      confirmation_state: "hypothesized",
+      confirmation_state: 'hypothesized',
       evidence_refs: [ev.id],
-      provenance: { extractor: "heuristic-v0.1", connector_version: "0.1.0" },
+      provenance: { extractor: 'heuristic-v0.1', connector_version: '0.1.0' },
       attributes: {
-        media_type: "text/plain",
+        media_type: 'text/plain',
         canonical_uri: observation.pointers?.path ?? observation.pointers?.url,
         source_type: observation.source_type,
       },
@@ -85,22 +89,22 @@ export function extractFromObservation(
 
   // Calendar / meeting-ish → Event
   if (
-    observation.source_type === "calendar.event" ||
-    observation.source_type === "meeting.notes" ||
-    /\bmeeting\b/i.test(observation.title ?? "") ||
-    /会議/.test(observation.title ?? "")
+    observation.source_type === 'calendar.event' ||
+    observation.source_type === 'meeting.notes' ||
+    /\bmeeting\b/i.test(observation.title ?? '') ||
+    /会議/.test(observation.title ?? '')
   ) {
     const eventEntity: Entity = {
       id: newId(),
       workspace_id: ws,
-      type: "Event",
-      title: observation.title ?? titleFromText(text, "Untitled event"),
+      type: 'Event',
+      title: observation.title ?? titleFromText(text, 'Untitled event'),
       summary: text.slice(0, 280) || undefined,
-      status: "occurred",
+      status: 'occurred',
       confidence: 0.75,
-      confirmation_state: "hypothesized",
+      confirmation_state: 'hypothesized',
       evidence_refs: [ev.id],
-      provenance: { extractor: "heuristic-v0.1" },
+      provenance: { extractor: 'heuristic-v0.1' },
       attributes: {
         occurred_at: observation.observed_at,
         location_or_channel: observation.pointers?.url,
@@ -112,18 +116,21 @@ export function extractFromObservation(
   }
 
   // Decision hypotheses — never confirmed here
-  if (matchAny(text, DECISION_PATTERNS) || matchAny(observation.title ?? "", DECISION_PATTERNS)) {
+  if (
+    matchAny(text, DECISION_PATTERNS) ||
+    matchAny(observation.title ?? '', DECISION_PATTERNS)
+  ) {
     const decision: Entity = {
       id: newId(),
       workspace_id: ws,
-      type: "Decision",
-      title: titleFromText(text, "Untitled decision"),
+      type: 'Decision',
+      title: titleFromText(text, 'Untitled decision'),
       summary: text.slice(0, 400),
-      status: "proposed",
+      status: 'proposed',
       confidence: 0.55,
-      confirmation_state: "hypothesized",
+      confirmation_state: 'hypothesized',
       evidence_refs: [ev.id],
-      provenance: { extractor: "heuristic-v0.1" },
+      provenance: { extractor: 'heuristic-v0.1' },
       attributes: {
         rationale: text.slice(0, 800),
         decided_at: observation.observed_at,
@@ -136,18 +143,21 @@ export function extractFromObservation(
   }
 
   // Idea hypotheses
-  if (matchAny(text, IDEA_PATTERNS) || matchAny(observation.title ?? "", IDEA_PATTERNS)) {
+  if (
+    matchAny(text, IDEA_PATTERNS) ||
+    matchAny(observation.title ?? '', IDEA_PATTERNS)
+  ) {
     const idea: Entity = {
       id: newId(),
       workspace_id: ws,
-      type: "Idea",
-      title: titleFromText(text, "Untitled idea"),
+      type: 'Idea',
+      title: titleFromText(text, 'Untitled idea'),
       summary: text.slice(0, 400),
-      status: "captured",
+      status: 'captured',
       confidence: 0.5,
-      confirmation_state: "hypothesized",
+      confirmation_state: 'hypothesized',
       evidence_refs: [ev.id],
-      provenance: { extractor: "heuristic-v0.1" },
+      provenance: { extractor: 'heuristic-v0.1' },
       attributes: {
         problem_frame: text.slice(0, 400),
       },
@@ -162,10 +172,10 @@ export function extractFromObservation(
     const rel: Relation = {
       id: newId(),
       workspace_id: ws,
-      predicate: "derived_from",
+      predicate: 'derived_from',
       from_id: entity.id,
       to_id: observation.id,
-      confirmation_state: "hypothesized",
+      confirmation_state: 'hypothesized',
       confidence: entity.confidence,
       evidence_refs: [ev.id],
       created_at: ts,
@@ -174,37 +184,47 @@ export function extractFromObservation(
     relations.push(rel);
   }
 
-  store.appendEvent("ClaimsExtracted", {
+  store.appendEvent('ClaimsExtracted', {
     observation_ids: [observation.id],
     claim_count: entities.length,
-    extractor_version: "heuristic-v0.1",
+    extractor_version: 'heuristic-v0.1',
   });
 
   return { entities, relations, evidence };
 }
 
-export function applyExtract(store: KnowledgeStore, result: ExtractResult): void {
+export function applyExtract(
+  store: KnowledgeStore,
+  result: ExtractResult,
+): void {
   for (const e of result.entities) store.upsertEntity(e);
   for (const r of result.relations) store.upsertRelation(r);
 }
 
-export function searchEntities(
-  entities: Entity[],
-  query: string,
-): Entity[] {
+export function searchEntities(entities: Entity[], query: string): Entity[] {
   const q = normalizeText(query);
   if (!q) return [];
   return entities
     .filter((e) => {
       const hay = normalizeText(
-        [e.title, e.summary ?? "", e.type, e.status, ...(e.tags ?? [])].join(" "),
+        [e.title, e.summary ?? '', e.type, e.status, ...(e.tags ?? [])].join(
+          ' ',
+        ),
       );
-      return hay.includes(q) || q.split(" ").every((t) => hay.includes(t));
+      return hay.includes(q) || q.split(' ').every((t) => hay.includes(t));
     })
     .sort((a, b) => {
       // Prefer confirmed
-      if (a.confirmation_state === "confirmed" && b.confirmation_state !== "confirmed") return -1;
-      if (b.confirmation_state === "confirmed" && a.confirmation_state !== "confirmed") return 1;
+      if (
+        a.confirmation_state === 'confirmed' &&
+        b.confirmation_state !== 'confirmed'
+      )
+        return -1;
+      if (
+        b.confirmation_state === 'confirmed' &&
+        a.confirmation_state !== 'confirmed'
+      )
+        return 1;
       return b.updated_at.localeCompare(a.updated_at);
     });
 }
@@ -212,14 +232,22 @@ export function searchEntities(
 export function decisionTrace(
   store: KnowledgeStore,
   query: string,
-): { decisions: Entity[]; evidence: Array<{ evidence: Evidence; observation?: Observation }> } {
-  const decisions = searchEntities(store.entities, query).filter((e) => e.type === "Decision");
-  const evidenceOut: Array<{ evidence: Evidence; observation?: Observation }> = [];
+): {
+  decisions: Entity[];
+  evidence: Array<{ evidence: Evidence; observation?: Observation }>;
+} {
+  const decisions = searchEntities(store.entities, query).filter(
+    (e) => e.type === 'Decision',
+  );
+  const evidenceOut: Array<{ evidence: Evidence; observation?: Observation }> =
+    [];
   for (const d of decisions) {
     for (const eid of d.evidence_refs) {
       const ev = store.evidence.find((x) => x.id === eid);
       if (!ev) continue;
-      const observation = store.observations.find((o) => o.id === ev.observation_id);
+      const observation = store.observations.find(
+        (o) => o.id === ev.observation_id,
+      );
       evidenceOut.push({ evidence: ev, observation });
     }
   }

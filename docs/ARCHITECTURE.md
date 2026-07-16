@@ -75,25 +75,25 @@ flowchart TB
 
 ### What it is / is not
 
-| Is | Is not |
-|---|---|
+| Is                                                   | Is not                                            |
+| ---------------------------------------------------- | ------------------------------------------------- |
 | Lifecycle management of normalized knowledge objects | A wrapper that dumps everything into a chat model |
-| Event-sourced evolution of knowledge over time | A single-vendor knowledge base |
-| A kernel that scales from Personal to Project OS | A replacement for collaboration tools themselves |
-| Connector-pluggable open infrastructure | An MCP-only runtime |
+| Event-sourced evolution of knowledge over time       | A single-vendor knowledge base                    |
+| A kernel that scales from Personal to Project OS     | A replacement for collaboration tools themselves  |
+| Connector-pluggable open infrastructure              | An MCP-only runtime                               |
 
 ### User outcomes
 
 **Personal (now)**
 
-- Trace *when* and *from what evidence* a decision was made
+- Trace _when_ and _from what evidence_ a decision was made
 - Connect `Idea`, `Interest`, and `Learning` across heterogeneous sources
 - See the structure of current interests from what you wrote, read, discussed, and watched
 
 **Project (future)**
 
 - Unify requirements, design docs, meeting notes, issues, Slack, and Git in one model
-- Let newcomers and successor agents explain *why things are the way they are* via Decision graphs
+- Let newcomers and successor agents explain _why things are the way they are_ via Decision graphs
 - Apply the same kernel under organizational policy with tenancy and ACL
 
 ### Design principles
@@ -200,14 +200,14 @@ flowchart LR
 
 ### Aggregates
 
-| Aggregate | Responsibility |
-|-----------|----------------|
-| `SourceConnection` | Connector config, auth, sync cursor |
-| `SourceRecord` | Immutable snapshot reference to raw payload |
-| `Observation` | Normalized "what was seen" at a point in time |
-| `KnowledgeEntity` | Typed canonical object (`Decision`, `Idea`, …) |
-| `Relation` | Typed semantic link between entities or evidence |
-| `CurationAction` | Human or policy confirmation, rejection, merge |
+| Aggregate          | Responsibility                                             |
+| ------------------ | ---------------------------------------------------------- |
+| `SourceConnection` | Connector config, auth, sync cursor                        |
+| `SourceRecord`     | Immutable snapshot reference to raw payload                |
+| `Observation`      | Normalized "what was seen" at a point in time              |
+| `KnowledgeEntity`  | Typed canonical object (`Decision`, `Idea`, …)             |
+| `Relation`         | Typed semantic link between entities or evidence           |
+| `CurationAction`   | Human or policy confirmation, rejection, merge             |
 | `ReasoningEpisode` | Auditable record of what an agent referenced and concluded |
 
 Personal and Project differ primarily in **Policy Context + tenancy**. Entity types are shared.
@@ -224,15 +224,15 @@ See the full glossary in [ubiquitous-language.md](ubiquitous-language.md).
 
 ### Critical distinctions (do not conflate)
 
-| Term | Meaning |
-|------|---------|
-| `Observation` | A fact observed in a source (commit, email, message) |
-| `Entity` | Canonical normalized knowledge (`Decision`, `Artifact`, …) |
-| `Domain Event` | Internal append-only system fact (`ObservationIngested`, …) |
+| Term             | Meaning                                                         |
+| ---------------- | --------------------------------------------------------------- |
+| `Observation`    | A fact observed in a source (commit, email, message)            |
+| `Entity`         | Canonical normalized knowledge (`Decision`, `Artifact`, …)      |
+| `Domain Event`   | Internal append-only system fact (`ObservationIngested`, …)     |
 | `Event` (entity) | User-facing occurrence (meeting, release, conversation session) |
-| `Evidence` | Link from a claim or entity back to an `Observation` |
-| `Hypothesis` | Unconfirmed claim with confidence |
-| `Confirmation` | Action that accepts, rejects, or merges a hypothesis |
+| `Evidence`       | Link from a claim or entity back to an `Observation`            |
+| `Hypothesis`     | Unconfirmed claim with confidence                               |
+| `Confirmation`   | Action that accepts, rejects, or merges a hypothesis            |
 
 ---
 
@@ -268,36 +268,36 @@ flowchart TB
 
 All entities share a common header:
 
-| Field | Meaning |
-|-------|---------|
-| `id` | ULID or UUID |
-| `workspace_id` | Personal or Project boundary |
-| `type` | One of eight canonical types |
-| `title` | Human-readable short name |
-| `summary` | One-paragraph current summary (may be cached projection) |
-| `status` | Type-specific lifecycle state |
-| `sensitivity` | `private`, `shareable`, `restricted`, … |
-| `confidence` | 0–1 when extraction-derived |
-| `confirmation_state` | `hypothesized`, `confirmed`, `disputed`, `archived` |
-| `valid_from` / `valid_to` | Valid time (when the knowledge held) |
-| `created_at` / `updated_at` | System time |
-| `aliases` | Surface-form variants |
-| `tags` | Lightweight labels (distinct from `Interest`) |
-| `evidence_refs` | References to Evidence |
-| `provenance` | Extractor model, prompt version, connector version |
+| Field                       | Meaning                                                  |
+| --------------------------- | -------------------------------------------------------- |
+| `id`                        | ULID or UUID                                             |
+| `workspace_id`              | Personal or Project boundary                             |
+| `type`                      | One of eight canonical types                             |
+| `title`                     | Human-readable short name                                |
+| `summary`                   | One-paragraph current summary (may be cached projection) |
+| `status`                    | Type-specific lifecycle state                            |
+| `sensitivity`               | `private`, `shareable`, `restricted`, …                  |
+| `confidence`                | 0–1 when extraction-derived                              |
+| `confirmation_state`        | `hypothesized`, `confirmed`, `disputed`, `archived`      |
+| `valid_from` / `valid_to`   | Valid time (when the knowledge held)                     |
+| `created_at` / `updated_at` | System time                                              |
+| `aliases`                   | Surface-form variants                                    |
+| `tags`                      | Lightweight labels (distinct from `Interest`)            |
+| `evidence_refs`             | References to Evidence                                   |
+| `provenance`                | Extractor model, prompt version, connector version       |
 
 #### The eight canonical types
 
-| Type | Role | Typical status flow |
-|------|------|---------------------|
-| **Decision** | Adopted conclusion with rationale and alternatives | `proposed` → `accepted` → `superseded` / `retracted` |
-| **Idea** | Unadopted or exploring concept | `captured` → `exploring` → `promoted` / `parked` / `discarded` |
-| **Project** | Bounded initiative container | `active` → `paused` / `completed` / `abandoned` |
-| **Person** | Human or stable agent identity | Identity resolution via hypothesis → confirmation |
-| **Interest** | Sustained topic or domain of attention | `emerging` → `active` → `waning` / `archived` |
-| **Learning** | Record of understanding gained | `noted` → `practiced` → `internalized` |
-| **Artifact** | Durable output (doc, code, note, diagram) | `draft` → `active` → `deprecated` / `deleted_at_source` |
-| **Event** | Time-bound occurrence (meeting, release, session) | `scheduled` → `occurred` / `cancelled` |
+| Type         | Role                                               | Typical status flow                                            |
+| ------------ | -------------------------------------------------- | -------------------------------------------------------------- |
+| **Decision** | Adopted conclusion with rationale and alternatives | `proposed` → `accepted` → `superseded` / `retracted`           |
+| **Idea**     | Unadopted or exploring concept                     | `captured` → `exploring` → `promoted` / `parked` / `discarded` |
+| **Project**  | Bounded initiative container                       | `active` → `paused` / `completed` / `abandoned`                |
+| **Person**   | Human or stable agent identity                     | Identity resolution via hypothesis → confirmation              |
+| **Interest** | Sustained topic or domain of attention             | `emerging` → `active` → `waning` / `archived`                  |
+| **Learning** | Record of understanding gained                     | `noted` → `practiced` → `internalized`                         |
+| **Artifact** | Durable output (doc, code, note, diagram)          | `draft` → `active` → `deprecated` / `deleted_at_source`        |
+| **Event**    | Time-bound occurrence (meeting, release, session)  | `scheduled` → `occurred` / `cancelled`                         |
 
 #### Decision (expanded)
 
@@ -321,21 +321,21 @@ A Decision is not a summary — it is an adopted choice.
 
 Relations are typed and carry `confirmation_state` and `evidence_refs`.
 
-| Predicate | From → To | Meaning |
-|-----------|-----------|---------|
-| `evidences` | Evidence → Entity / Relation | Grounding link |
-| `derived_from` | Entity → Observation / Entity | Provenance |
-| `about` | Event / Artifact / Learning → Interest / Project | Subject matter |
-| `produced` | Person / Project → Artifact | Creation |
-| `participated_in` | Person → Event | Attendance or involvement |
-| `decides_for` | Decision → Project / Artifact | Scope of applicability |
-| `supersedes` | Decision → Decision | Replacement |
-| `promoted_to` | Idea → Decision | Promotion |
-| `related_to` | * ↔ * | Weak association (use sparingly) |
-| `mentions` | Observation → Person / Artifact | Low-confidence mention |
-| `learns` | Person → Learning | Learning subject |
-| `contradicts` | Claim / Decision ↔ Claim / Decision | Conflict |
-| `belongs_to` | * → Project / Workspace | Containment |
+| Predicate         | From → To                                        | Meaning                          |
+| ----------------- | ------------------------------------------------ | -------------------------------- |
+| `evidences`       | Evidence → Entity / Relation                     | Grounding link                   |
+| `derived_from`    | Entity → Observation / Entity                    | Provenance                       |
+| `about`           | Event / Artifact / Learning → Interest / Project | Subject matter                   |
+| `produced`        | Person / Project → Artifact                      | Creation                         |
+| `participated_in` | Person → Event                                   | Attendance or involvement        |
+| `decides_for`     | Decision → Project / Artifact                    | Scope of applicability           |
+| `supersedes`      | Decision → Decision                              | Replacement                      |
+| `promoted_to`     | Idea → Decision                                  | Promotion                        |
+| `related_to`      | * ↔ *                                            | Weak association (use sparingly) |
+| `mentions`        | Observation → Person / Artifact                  | Low-confidence mention           |
+| `learns`          | Person → Learning                                | Learning subject                 |
+| `contradicts`     | Claim / Decision ↔ Claim / Decision              | Conflict                         |
+| `belongs_to`      | * → Project / Workspace                          | Containment                      |
 
 ### 5.4 Observation model (pre-canonical)
 
@@ -353,18 +353,18 @@ Observation {
 
 ### 5.5 Source → Observation → Entity mapping
 
-| Source object | Observation type | Primary entity candidates |
-|---------------|------------------|---------------------------|
-| Git commit | `code.change` | Artifact, Event, Learning?, Decision? (if message is explicit) |
-| PR + review | `code.review` | Decision, Artifact, Person |
-| Drive document | `doc.revision` | Artifact, Idea, Decision (via extraction) |
-| Meeting notes | `meeting.notes` | Event, Decision, Person, Project |
-| Slack thread | `chat.thread` | Event, Idea, Decision (candidate), Person |
-| Calendar entry | `calendar.event` | Event, Person, Project |
-| Email | `email.message` | Event, Person, Idea / Decision (low recall) |
-| ChatGPT export | `ai.conversation` | Idea, Learning, Decision (candidate), Interest |
-| YouTube history | `media.view` | Event, Interest, Learning |
-| X post / bookmark | `social.post` | Interest, Idea, Person |
+| Source object     | Observation type  | Primary entity candidates                                      |
+| ----------------- | ----------------- | -------------------------------------------------------------- |
+| Git commit        | `code.change`     | Artifact, Event, Learning?, Decision? (if message is explicit) |
+| PR + review       | `code.review`     | Decision, Artifact, Person                                     |
+| Drive document    | `doc.revision`    | Artifact, Idea, Decision (via extraction)                      |
+| Meeting notes     | `meeting.notes`   | Event, Decision, Person, Project                               |
+| Slack thread      | `chat.thread`     | Event, Idea, Decision (candidate), Person                      |
+| Calendar entry    | `calendar.event`  | Event, Person, Project                                         |
+| Email             | `email.message`   | Event, Person, Idea / Decision (low recall)                    |
+| ChatGPT export    | `ai.conversation` | Idea, Learning, Decision (candidate), Interest                 |
+| YouTube history   | `media.view`      | Event, Interest, Learning                                      |
+| X post / bookmark | `social.post`     | Interest, Idea, Person                                         |
 
 ### 5.6 Extraction rule (critical)
 
@@ -426,10 +426,10 @@ See [event-model.md](event-model.md) for the full catalog.
 
 ### Two event concepts (strict separation)
 
-| Concept | Layer | Example |
-|---------|-------|---------|
-| **Domain Event** | System append-only log | `ObservationIngested` |
-| **Event entity** | Canonical knowledge | "Sprint planning meeting on 2026-03-01" |
+| Concept          | Layer                  | Example                                 |
+| ---------------- | ---------------------- | --------------------------------------- |
+| **Domain Event** | System append-only log | `ObservationIngested`                   |
+| **Event entity** | Canonical knowledge    | "Sprint planning meeting on 2026-03-01" |
 
 ### Ingestion sequence
 
@@ -491,15 +491,15 @@ flowchart TB
   GRAPH --> CACHE
 ```
 
-| Store | Role | Implementation stance |
-|-------|------|----------------------|
-| Object Store | Immutable `SourceRecord` bodies | S3-compatible or local filesystem |
-| Event Log | Domain events | Postgres append table, NATS, or file log — swappable |
-| Metadata DB | Connections, jobs, cursors | OLTP |
-| Entity Store | Current graph state | Postgres + JSONB or property graph — TBD |
-| Full-text | Lexical search | Postgres FTS or OpenSearch |
-| Vector | Similarity (non-canonical) | pgvector, sqlite-vec, Qdrant — swappable |
-| Local-first | Single-machine deployment | All layers embeddable (OSS requirement) |
+| Store        | Role                            | Implementation stance                                |
+| ------------ | ------------------------------- | ---------------------------------------------------- |
+| Object Store | Immutable `SourceRecord` bodies | S3-compatible or local filesystem                    |
+| Event Log    | Domain events                   | Postgres append table, NATS, or file log — swappable |
+| Metadata DB  | Connections, jobs, cursors      | OLTP                                                 |
+| Entity Store | Current graph state             | Postgres + JSONB or property graph — TBD             |
+| Full-text    | Lexical search                  | Postgres FTS or OpenSearch                           |
+| Vector       | Similarity (non-canonical)      | pgvector, sqlite-vec, Qdrant — swappable             |
+| Local-first  | Single-machine deployment       | All layers embeddable (OSS requirement)              |
 
 ### Storage principles
 
@@ -552,14 +552,14 @@ flowchart LR
 
 ### Connector SPI operations
 
-| Operation | Purpose |
-|-----------|---------|
-| `discover()` | List available source objects or scopes |
-| `authenticate()` | Establish credentials |
-| `sync(cursor)` | Incremental fetch → Observations |
-| `fetch(native_id)` | Single SourceRecord |
-| `map_to_observation(raw)` | Normalize to Observation |
-| `capabilities()` | incremental?, webhook?, export-only? |
+| Operation                 | Purpose                                 |
+| ------------------------- | --------------------------------------- |
+| `discover()`              | List available source objects or scopes |
+| `authenticate()`          | Establish credentials                   |
+| `sync(cursor)`            | Incremental fetch → Observations        |
+| `fetch(native_id)`        | Single SourceRecord                     |
+| `map_to_observation(raw)` | Normalize to Observation                |
+| `capabilities()`          | incremental?, webhook?, export-only?    |
 
 See [connector-spi.md](connector-spi.md).
 
@@ -596,13 +596,13 @@ Compared to "second brain", note-sync, and RAG-memory tools:
 
 ### In scope
 
-| Area | Detail |
-|------|--------|
-| Sources | ChatGPT export, GitHub (export or read-only API), local Markdown |
-| Entity types | Decision, Idea, Artifact, Event |
-| Interest / Learning / Person / Project | Minimal or manual creation |
-| Core | Evidence links required, Confirmation CLI, full-text + simple graph traversal |
-| Agent skill | "What did I decide about X, and what is the evidence?" |
+| Area                                   | Detail                                                                        |
+| -------------------------------------- | ----------------------------------------------------------------------------- |
+| Sources                                | ChatGPT export, GitHub (export or read-only API), local Markdown              |
+| Entity types                           | Decision, Idea, Artifact, Event                                               |
+| Interest / Learning / Person / Project | Minimal or manual creation                                                    |
+| Core                                   | Evidence links required, Confirmation CLI, full-text + simple graph traversal |
+| Agent skill                            | "What did I decide about X, and what is the evidence?"                        |
 
 ### Out of scope
 
@@ -642,10 +642,10 @@ timeline
 
 ### Phase gates
 
-| Transition | Gate |
-|------------|------|
-| Phase 1 → 2 | Confirmation UX is low-friction; extraction precision acceptable or clearly labeled |
-| Phase 3 → 4 | Policy Context proven — sensitivity and workspace boundaries hold under real load |
+| Transition  | Gate                                                                                 |
+| ----------- | ------------------------------------------------------------------------------------ |
+| Phase 1 → 2 | Confirmation UX is low-friction; extraction precision acceptable or clearly labeled  |
+| Phase 3 → 4 | Policy Context proven — sensitivity and workspace boundaries hold under real load    |
 | Phase 4 → 5 | Decision graphs explain architectural history at human-architect quality on eval set |
 
 ---
@@ -702,8 +702,8 @@ This is a product of Knowledge Model + Query Assembler + ReasoningEpisode — no
 
 Draft JSON Schema stubs live in [`schemas/`](../schemas/). They are **not** validated or code-generated in Phase 0.
 
-| Schema | Path |
-|--------|------|
-| Entity base | `schemas/entity.base.schema.json` |
-| Observation | `schemas/observation.schema.json` |
+| Schema       | Path                               |
+| ------------ | ---------------------------------- |
+| Entity base  | `schemas/entity.base.schema.json`  |
+| Observation  | `schemas/observation.schema.json`  |
 | Domain event | `schemas/domain-event.schema.json` |

@@ -25,20 +25,35 @@ pnpm zenchi init
 pnpm zenchi ingest --connector markdown-local --path ./fixtures/notes
 ```
 
+## Code style
+
+TypeScript and JSON are formatted and linted with [Biome](https://biomejs.dev/). Markdown is formatted with [Prettier](https://prettier.io/) (Biome Markdown support is not production-ready yet).
+
+```bash
+pnpm check        # Biome + Prettier (CI and local gate)
+pnpm check:fix    # apply safe fixes / formatting
+```
+
+Husky runs `lint-staged` on pre-commit (Biome for staged `*.{ts,json}`, Prettier for staged `*.md`). CI runs `pnpm check` before build.
+
+For VS Code or Cursor, install the workspace-recommended extensions (Biome and Prettier). Format on save is enabled via [`.vscode/settings.json`](.vscode/settings.json).
+
+Agent-oriented conventions live under [`.cursor/rules/`](.cursor/rules/). Local-only rules go in `.cursor/rules/private/` (gitignored).
+
 ## Commit messages (Conventional Commits)
 
 This project uses [Conventional Commits](https://www.conventionalcommits.org/). Releases are driven by [semantic-release](https://semantic-release.gitbook.io/) from commit history on `main`.
 
-| Type | When to use | Version impact |
-|------|-------------|----------------|
-| `feat` | New user-visible capability | minor |
-| `fix` | Bug fix | patch |
-| `docs` | Documentation only | none (unless configured) |
-| `chore` | Build, CI, tooling, deps | none |
-| `refactor` | Code change with no feature/fix | none |
-| `test` | Tests only | none |
-| `ci` | CI configuration | none |
-| `perf` | Performance improvement | patch |
+| Type       | When to use                     | Version impact           |
+| ---------- | ------------------------------- | ------------------------ |
+| `feat`     | New user-visible capability     | minor                    |
+| `fix`      | Bug fix                         | patch                    |
+| `docs`     | Documentation only              | none (unless configured) |
+| `chore`    | Build, CI, tooling, deps        | none                     |
+| `refactor` | Code change with no feature/fix | none                     |
+| `test`     | Tests only                      | none                     |
+| `ci`       | CI configuration                | none                     |
+| `perf`     | Performance improvement         | patch                    |
 
 Breaking changes: add `BREAKING CHANGE:` in the commit body, or use `feat!:` / `fix!:` — these trigger a **major** bump.
 

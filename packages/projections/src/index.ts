@@ -1,5 +1,5 @@
-import type { Entity } from "@zenchi-zenno/core";
-import { normalizeText, searchEntities } from "@zenchi-zenno/core";
+import type { Entity } from '@zenchi-zenno/core';
+import { normalizeText, searchEntities } from '@zenchi-zenno/core';
 
 /**
  * Full-text projection — rebuildable from the entity store.
@@ -13,13 +13,13 @@ export function buildTokenIndex(entities: Entity[]): Map<string, Set<string>> {
   const index = new Map<string, Set<string>>();
   for (const e of entities) {
     const tokens = normalizeText(
-      [e.title, e.summary ?? "", e.type, ...(e.tags ?? [])].join(" "),
+      [e.title, e.summary ?? '', e.type, ...(e.tags ?? [])].join(' '),
     )
-      .split(" ")
+      .split(' ')
       .filter(Boolean);
     for (const t of tokens) {
       if (!index.has(t)) index.set(t, new Set());
-      index.get(t)!.add(e.id);
+      index.get(t)?.add(e.id);
     }
   }
   return index;
