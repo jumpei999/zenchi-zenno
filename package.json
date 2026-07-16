@@ -48,6 +48,7 @@
     "@semantic-release/release-notes-generator": "^14.1.1",
     "@types/node": "^22.20.1",
     "commitizen": "^4.3.2",
+    "conventional-changelog-conventionalcommits": "^10.2.1",
     "cz-conventional-changelog": "^3.3.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8",

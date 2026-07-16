@@ -109,7 +109,7 @@ You do not need to pass `-s` manually unless hooks are bypassed (`git commit --n
 
 ## Releases
 
-Maintainers trigger [semantic-release](https://semantic-release.gitbook.io/) via **Actions → Release → Run workflow** (`workflow_dispatch` only; push to `main` does not publish). It then:
+Maintainers merge to `main`. [semantic-release](https://semantic-release.gitbook.io/) then runs on push (also available via **Actions → Release → Run workflow**). It:
 
 1. Determines the next SemVer from Conventional Commits
 2. Updates `CHANGELOG.md` and package versions (locked across the monorepo)
@@ -120,7 +120,7 @@ Publishing requires a Trusted Publisher (GitHub Actions → `release.yml`) confi
 
 `@semantic-release/git` pushes version bump commits directly to `main`. Maintainers must configure a fine-grained PAT (Token name `zenchi-zenno-release`) as the Actions secret `RELEASE_GITHUB_TOKEN`, and set that PAT owner to **Exempt** on the `main` ruleset Bypass list (the default `GITHUB_TOKEN` cannot bypass required PRs / status checks).
 
-An accidental `1.0.0` publish was yanked from npm. Those package names **cannot reuse `1.0.0`** on the registry; a future GA should use `1.0.1` (or later). Current line is `0.x` (baseline tag `v0.1.0`). While on `0.x`, breaking changes bump **minor** so semantic-release does not jump to `1.0.0` again.
+An accidental `1.0.0` publish was yanked from npm. Those package names **cannot reuse `1.0.0`** on the registry; a future GA should use `1.0.1` (or later). Current line is `0.x` (baseline tag `v0.1.0`). Avoid `BREAKING CHANGE` / `!` commits until you intend to leave `0.x` (they bump **major**).
 
 Contributors do **not** publish packages under `@zenchi-zenno` without maintainership. See [GOVERNANCE.md](GOVERNANCE.md).
 
