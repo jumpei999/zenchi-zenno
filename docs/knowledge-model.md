@@ -11,6 +11,7 @@ Deep specification for zenchi-zenno's canonical knowledge ontology.
 Knowledge in zenchi-zenno flows from immutable source material to confirmed canonical entities:
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 flowchart LR
   SR[SourceRecord]
   OBS[Observation]
@@ -78,6 +79,7 @@ All eight entity types extend a common header.
 **Status lifecycle:**
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 stateDiagram-v2
   [*] --> proposed
   proposed --> accepted
@@ -303,6 +305,7 @@ Agents must surface `confirmation_state` when presenting extracted knowledge.
 ## Confirmation state machine
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 stateDiagram-v2
   [*] --> hypothesized: extract
   hypothesized --> confirmed: confirm

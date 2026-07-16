@@ -37,6 +37,7 @@ RAG is one retrieval mechanism, not the product center. zenchi-zenno is organize
 API, Export, and MCP are all **adapters**. The domain model and storage contracts are the source of truth.
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 flowchart TB
   subgraph sources [Source Reality]
     GH[GitHub]
@@ -110,6 +111,7 @@ flowchart TB
 ## 2. System Context
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 flowchart TB
   user[Knowledge Owner]
   collab[Future Collaborator]
@@ -159,6 +161,7 @@ flowchart TB
 ### Bounded contexts
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 flowchart LR
   subgraph ingestion [Ingestion Context]
     Conn[Connector]
@@ -245,6 +248,7 @@ This section is the architectural center. See [knowledge-model.md](knowledge-mod
 Source-specific schemas (`Commit`, `DriveFile`, `SlackMessage`) must not be the application center. They remain **Observation types**. Meaning lives in shared Entity types.
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 flowchart TB
   SR[SourceRecord]
   OBS[Observation]
@@ -375,6 +379,7 @@ Extraction creates `Hypothesis(Decision)` (or Idea). Promotion requires corrobor
 ### 5.7 Confirmation state machine
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 stateDiagram-v2
   [*] --> Observed: ingest
   Observed --> Hypothesized: extract claims
@@ -397,6 +402,7 @@ Agent behavior:
 ### 5.8 Entity-relationship overview
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 erDiagram
   WORKSPACE ||--o{ ENTITY : contains
   ENTITY ||--o{ ENTITY_VERSION : versions
@@ -434,6 +440,7 @@ See [event-model.md](event-model.md) for the full catalog.
 ### Ingestion sequence
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 sequenceDiagram
   participant C as Connector
   participant I as Ingestion
@@ -466,6 +473,7 @@ Re-ingestion must not duplicate entities. Re-extraction emits new `ClaimsExtract
 ## 7. Storage Design
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 flowchart TB
   subgraph durable [Durable Layer]
     OBJ[(Object Store<br/>raw payloads)]
@@ -522,6 +530,7 @@ flowchart TB
 MCP is a **first-class transport**, not a **first-class domain**.
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 flowchart LR
   subgraph external [External Transports]
     API[Native API]
@@ -624,6 +633,7 @@ Compared to "second brain", note-sync, and RAG-memory tools:
 ## 11. Phased Roadmap
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 timeline
   title zenchi-zenno Roadmap
   section Phase0
@@ -653,6 +663,7 @@ timeline
 ## Appendix A — Logical component diagram
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 flowchart TB
   UI[CLI / Web / IDE / MCP clients]
   API[Open API + MCP Server facade]

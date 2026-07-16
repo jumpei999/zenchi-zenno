@@ -89,6 +89,7 @@ DomainEvent {
 ## Ingestion sequence
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 sequenceDiagram
   participant C as Connector
   participant I as IngestionOrchestrator

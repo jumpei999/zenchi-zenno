@@ -19,6 +19,7 @@ Connectors are **adapters**. The SPI is transport-agnostic:
 MCP implements the same SPI as API and Export. The domain never branches on transport type.
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 flowchart LR
   subgraph transports [Transports]
     API[Native API]
@@ -87,6 +88,7 @@ interface Connector {
 ## Lifecycle
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 stateDiagram-v2
   [*] --> registered: SourceConnectionRegistered
   registered --> authenticated: authenticate success
@@ -141,6 +143,7 @@ When `supported_transports` includes `mcp`:
 ### Example MCP ingress flow
 
 ```mermaid
+%%{init: {"theme": "neutral"}}%%
 sequenceDiagram
   participant K as zenchi-zenno
   participant CC as MCPConnector
