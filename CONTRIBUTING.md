@@ -21,9 +21,9 @@ Thank you for your interest in zenchi-zenno. See also [GOVERNANCE.md](GOVERNANCE
 ```bash
 pnpm install
 pnpm build
-pnpm zenchi init
-pnpm zenchi ingest --connector markdown-local --path ./fixtures/notes
-pnpm zenchi confirm --list
+pnpm zz init
+pnpm zz ingest --connector markdown-local --path ./fixtures/notes
+pnpm zz confirm --list
 ```
 
 ### Hypothesis workflow
@@ -31,12 +31,12 @@ pnpm zenchi confirm --list
 Extracted entities start as **hypotheses**. Do not treat them as ground truth until confirmed:
 
 ```bash
-pnpm zenchi confirm --list                 # evidence + confidence bands
-pnpm zenchi confirm --accept <id>          # single accept
-pnpm zenchi confirm --reject <id>          # single reject
-pnpm zenchi confirm --accept-all --type Decision   # bulk (use carefully)
-pnpm zenchi create --type Person --title "Ada" --identity github:ada
-pnpm zenchi mcp                            # local MCP egress for agents
+pnpm zz confirm --list                 # evidence + confidence bands
+pnpm zz confirm --accept <id>          # single accept
+pnpm zz confirm --reject <id>          # single reject
+pnpm zz confirm --accept-all --type Decision   # bulk (use carefully)
+pnpm zz create --type Person --title "Ada" --identity github:ada
+pnpm zz mcp                            # local MCP egress for agents
 ```
 
 Low-confidence extracted entities should usually stay hypothesized until a human reviews the evidence.

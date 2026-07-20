@@ -21,13 +21,13 @@ import { fullTextSearch } from '@zenchi-zenno/projections';
 import { Command } from 'commander';
 
 function defaultDataDir(): string {
-  return resolve(process.cwd(), '.zenchi');
+  return resolve(process.cwd(), '.zz');
 }
 
 function openStore(dataDir?: string): KnowledgeStore {
   const root = resolve(dataDir ?? defaultDataDir());
   if (!existsSync(root)) {
-    console.error(`Workspace not initialized: ${root}\nRun: zenchi init`);
+    console.error(`Workspace not initialized: ${root}\nRun: zz init`);
     process.exit(1);
   }
   return new KnowledgeStore(root);
@@ -82,7 +82,7 @@ function printHypothesisDetail(store: KnowledgeStore, e: Entity): void {
     }
   }
   console.log(
-    `actions: zenchi confirm --accept ${e.id}  |  zenchi confirm --reject ${e.id}`,
+    `actions: zz confirm --accept ${e.id}  |  zz confirm --reject ${e.id}`,
   );
   console.log('');
 }
@@ -150,13 +150,13 @@ function listHypotheses(store: KnowledgeStore, type?: EntityType): void {
 
 const program = new Command();
 program
-  .name('zenchi')
+  .name('zz')
   .description('zenchi-zenno Personal Knowledge OS CLI (OSS, local-first)')
   .version('0.1.0');
 
 program
   .command('init')
-  .description('Initialize a personal workspace under .zenchi/')
+  .description('Initialize a personal workspace under .zz/')
   .option('-d, --data-dir <path>', 'workspace directory', defaultDataDir())
   .option('-n, --name <name>', 'workspace name', 'personal')
   .action((opts: { dataDir: string; name: string }) => {
@@ -173,24 +173,69 @@ program
     '-c, --connector <id>',
     'markdown-local | chatgpt-export | github',
   )
-  .requiredOption('-p, --path <path>', 'export path or directory')
+  .option(
+    '-p, --path <path>',
+    'export path or directory (required except github API mode)',
+  )
+  .option(
+    '--repo <owner/name>',
+    'GitHub API mode: repository (uses GITHUB_TOKEN or ZZ_GITHUB_TOKEN)',
+  )
+  .option(
+    '--limit <n>',
+    'GitHub API mode: max commits/PRs per type (default 30)',
+    '30',
+  )
   .option('-d, --data-dir <path>', 'workspace directory', defaultDataDir())
   .action(
-    async (opts: { connector: string; path: string; dataDir: string }) => {
+    async (opts: {
+      connector: string;
+      path?: string;
+      repo?: string;
+      limit: string;
+      dataDir: string;
+    }) => {
       const store = openStore(opts.dataDir);
       const connector = getConnector(opts.connector);
+      const token =
+        process.env.ZZ_GITHUB_TOKEN ?? process.env.GITHUB_TOKEN ?? undefined;
+      const useGithubApi =
+        opts.connector === 'github' && Boolean(opts.repo) && Boolean(token);
+
+      if (opts.connector === 'github' && opts.repo && !token) {
+        console.error(
+          'GitHub API mode requires GITHUB_TOKEN or ZZ_GITHUB_TOKEN in the environment.',
+        );
+        process.exit(1);
+      }
+      if (!useGithubApi && !opts.path) {
+        console.error(
+          'Provide --path for export/local connectors, or --repo with a GitHub token for API mode.',
+        );
+        process.exit(1);
+      }
+
+      const limit = Number.parseInt(opts.limit, 10);
       const correlation = `sync-${Date.now()}`;
       store.appendEvent(
         'SyncStarted',
-        { connector: opts.connector, path: opts.path },
+        {
+          connector: opts.connector,
+          path: opts.path,
+          repo: opts.repo,
+          mode: useGithubApi ? 'api' : 'export',
+        },
         {
           correlation_id: correlation,
         },
       );
 
       const sync = await connector.sync({
-        path: resolve(opts.path),
+        path: opts.path ? resolve(opts.path) : undefined,
         workspace_id: store.workspace.id,
+        token: useGithubApi ? token : undefined,
+        repo: useGithubApi ? opts.repo : undefined,
+        limit: Number.isFinite(limit) ? limit : 30,
       });
 
       let ingested = 0;
@@ -228,6 +273,7 @@ program
           skipped,
           extracted,
           errors: sync.errors,
+          mode: useGithubApi ? 'api' : 'export',
         },
         { correlation_id: correlation },
       );
@@ -236,11 +282,13 @@ program
         JSON.stringify(
           {
             connector: opts.connector,
+            mode: useGithubApi ? 'api' : 'export',
+            repo: opts.repo,
             ingested,
             skipped_duplicates: skipped,
             entities_extracted: extracted,
             errors: sync.errors,
-            note: 'Extracted entities are hypothesized until you confirm them. Review with: zenchi confirm --list',
+            note: 'Extracted entities are hypothesized until you confirm them. Review with: zz confirm --list',
           },
           null,
           2,

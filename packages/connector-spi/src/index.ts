@@ -46,17 +46,26 @@ export type SourceRecordDraft = {
   observation: ObservationDraft;
 };
 
+/** Input for Connector.sync — transport-specific fields are optional. */
+export interface SyncInput {
+  workspace_id: string;
+  path?: string;
+  cursor?: SyncCursor;
+  /** API auth token (e.g. GitHub PAT). Never log or persist in Observations. */
+  token?: string;
+  /** API scope such as `owner/repo` for GitHub. */
+  repo?: string;
+  /** Soft cap on items per resource type (API mode). */
+  limit?: number;
+}
+
 export interface Connector {
   metadata(): ConnectorMetadata;
   capabilities(): Capabilities;
   authenticate?(
     credentials: Record<string, string>,
   ): Promise<{ ok: boolean; error?: string }>;
-  sync(input: {
-    path?: string;
-    cursor?: SyncCursor;
-    workspace_id: string;
-  }): Promise<SyncResult>;
+  sync(input: SyncInput): Promise<SyncResult>;
   health?(): Promise<{ ok: boolean; detail?: string }>;
 }
 

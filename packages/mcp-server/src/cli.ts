@@ -7,6 +7,6 @@ const dataDir =
     .find((a) => a.startsWith('--data-dir='))
     ?.slice('--data-dir='.length) ??
   process.argv[process.argv.indexOf('--data-dir') + 1] ??
-  resolve(process.cwd(), '.zenchi');
+  resolve(process.cwd(), '.zz');
 
 await startMcpServer(resolve(dataDir));

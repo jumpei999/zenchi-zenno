@@ -4,7 +4,7 @@
   "license": "MIT",
   "type": "module",
   "bin": {
-    "zenchi": "./dist/index.js"
+    "zz": "./dist/index.js"
   },
   "main": "./dist/index.js",
   "files": [

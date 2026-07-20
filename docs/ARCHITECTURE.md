@@ -606,22 +606,23 @@ Compared to "second brain", note-sync, and RAG-memory tools:
 
 ### In scope
 
-| Area                                   | Detail                                                                                     |
-| -------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Sources                                | ChatGPT export, GitHub (**export-only** in shipped MVP; live API deferred), local Markdown |
-| Entity types                           | Decision, Idea, Artifact, Event                                                            |
-| Interest / Learning / Person / Project | Minimal or manual creation (`zenchi create`)                                               |
-| Core                                   | Evidence links required, Confirmation CLI, full-text + Decision-centric graph walk         |
-| Agent skill                            | [agent-skill-decision-trace.md](agent-skill-decision-trace.md) — CLI + MCP                 |
+| Area                                   | Detail                                                                             |
+| -------------------------------------- | ---------------------------------------------------------------------------------- |
+| Sources                                | ChatGPT export, GitHub (export **or** optional read-only REST API), local Markdown |
+| Entity types                           | Decision, Idea, Artifact, Event                                                    |
+| Interest / Learning / Person / Project | Minimal or manual creation (`zz create`)                                           |
+| Core                                   | Evidence links required, Confirmation CLI, full-text + Decision-centric graph walk |
+| Agent skill                            | [agent-skill-decision-trace.md](agent-skill-decision-trace.md) — CLI + MCP         |
 
 ### Shipped vs deferred (Phase 1)
 
-| Shipped                                       | Deferred (labeled)                  |
-| --------------------------------------------- | ----------------------------------- |
-| Confirm UX with evidence + confidence bands   | GitHub live read-only API           |
-| Heuristic extract with confidence labels      | General `get_entity_graph` MCP tool |
-| `zenchi trace` / MCP `get_decision_trace`     | Google suite (Phase 2)              |
-| Manual Person / Project / Interest / Learning | Auto-extract for those types        |
+| Shipped                                       | Deferred (labeled)                        |
+| --------------------------------------------- | ----------------------------------------- |
+| Confirm UX with evidence + confidence bands   | Google suite (Phase 2)                    |
+| Heuristic extract with confidence labels      | General `get_entity_graph` MCP tool       |
+| `zz trace` / MCP `get_decision_trace`         | Slack / Discord                           |
+| GitHub export + optional RO API               | Auto-extract Person / Interest / Learning |
+| Manual Person / Project / Interest / Learning | Webhook / incremental GitHub sync         |
 
 ### Out of scope
 

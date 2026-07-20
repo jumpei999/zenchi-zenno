@@ -73,6 +73,13 @@ describe('extractFromObservation fixtures', () => {
       assert.ok(node.evidence.length >= 1);
       assert.ok(node.derived_from.length >= 1);
       assert.ok(node.related_entities.some((e) => e.type === 'Artifact'));
+
+      // Alias relaxation: "database" should hit the PostgreSQL ADR Decision
+      const byAlias = decisionTrace(store, 'database');
+      assert.ok(
+        byAlias.nodes.length >= 1,
+        'trace --query database should match PostgreSQL ADR',
+      );
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

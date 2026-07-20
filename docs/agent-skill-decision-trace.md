@@ -4,29 +4,38 @@
 
 > What did I decide about X, and what is the evidence?
 
-This is the Phase 1 Personal MVP agent skill (ARCHITECTURE §10). It uses the local workspace under `.zenchi/` — no cloud required.
+This is the Phase 1 Personal MVP agent skill (ARCHITECTURE §10). It uses the local workspace under `.zz/` — no cloud required.
 
 ## Prerequisites
 
 ```bash
 pnpm install
 pnpm build
-pnpm zenchi init
+pnpm zz init
 ```
 
 Ingest at least one source (fixtures work for a demo):
 
 ```bash
-pnpm zenchi ingest --connector markdown-local --path ./fixtures/notes
+pnpm zz ingest --connector markdown-local --path ./fixtures/notes
 # optional second source
-pnpm zenchi ingest --connector chatgpt-export --path ./fixtures/chatgpt-export
+pnpm zz ingest --connector chatgpt-export --path ./fixtures/chatgpt-export
+pnpm zz ingest --connector github --path ./fixtures/github
+```
+
+For **network footprint** evaluation (commits / PRs from a real repo):
+
+```bash
+export GITHUB_TOKEN=ghp_...   # or ZZ_GITHUB_TOKEN
+# fine-grained PAT: contents:read, pull-requests:read
+pnpm zz ingest --connector github --repo owner/name
 ```
 
 Review hypotheses before treating them as accepted knowledge:
 
 ```bash
-pnpm zenchi confirm --list
-pnpm zenchi confirm --accept <entity-id>
+pnpm zz confirm --list
+pnpm zz confirm --accept <entity-id>
 ```
 
 Extractors never auto-confirm Decisions. Confidence bands (`high` / `medium` / `low`) are labels, not truth.
@@ -35,10 +44,10 @@ Extractors never auto-confirm Decisions. Confidence bands (`high` / `medium` / `
 
 ```bash
 # Find candidates
-pnpm zenchi search "postgres"
+pnpm zz search "postgres"
 
 # Decision archaeology: Decision → evidence → derived_from → related entities
-pnpm zenchi trace --query "database"
+pnpm zz trace --query "database"
 ```
 
 Interpret results:
@@ -57,8 +66,8 @@ Interpret results:
 Start the local stdio server:
 
 ```bash
-pnpm zenchi mcp
-# or: node packages/mcp-server/dist/cli.js --data-dir /absolute/path/to/.zenchi
+pnpm zz mcp
+# or: node packages/mcp-server/dist/cli.js --data-dir /absolute/path/to/.zz
 ```
 
 Cursor / Claude Desktop style config — see also [packages/mcp-server/README.md](../packages/mcp-server/README.md):
@@ -71,7 +80,7 @@ Cursor / Claude Desktop style config — see also [packages/mcp-server/README.md
       "args": [
         "packages/mcp-server/dist/cli.js",
         "--data-dir",
-        "/absolute/path/to/.zenchi"
+        "/absolute/path/to/.zz"
       ]
     }
   }
@@ -83,6 +92,7 @@ Cursor / Claude Desktop style config — see also [packages/mcp-server/README.md
 | `search_entities`    | Broad discovery by keyword / type                       |
 | `get_decision_trace` | Answer “what did I decide about X?” with evidence graph |
 | `list_evidence`      | Drill into one entity id                                |
+| `list_hypotheses`    | Same as `zz confirm --list` — review before accept      |
 
 Example agent prompt:
 
@@ -93,12 +103,12 @@ Example agent prompt:
 Person / Project / Interest / Learning are not auto-extracted in Phase 1:
 
 ```bash
-pnpm zenchi create --type Project --title "zenchi-zenno MVP" --goal "Ship Personal OS"
-pnpm zenchi create --type Person --title "Ada" --identity github:ada
+pnpm zz create --type Project --title "zenchi-zenno MVP" --goal "Ship Personal OS"
+pnpm zz create --type Person --title "Ada" --identity github:ada
 ```
 
 ## Out of scope for this skill
 
-- Live GitHub / Google / Slack sync
+- Google / Slack sync (GitHub read-only API ingest is supported)
 - Treating hypothesized entities as ground truth
 - General entity-graph traversal beyond Decision-centric trace (`get_entity_graph` deferred)

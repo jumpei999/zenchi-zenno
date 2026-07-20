@@ -27,15 +27,15 @@ This aligns with [ARCHITECTURE §7 Storage](ARCHITECTURE.md#7-storage-design) (e
 
 ## Open source (this repository)
 
-| Area                   | Includes                                                    | Rationale                     |
-| ---------------------- | ----------------------------------------------------------- | ----------------------------- |
-| **Kernel**             | Entity types, relations, event log contracts, idempotency   | Trust and fork-resistant core |
-| **Connector SPI**      | API / Export / MCP as peer transports                       | Ecosystem growth              |
-| **Basic connectors**   | ChatGPT export, GitHub (read-only / export), local Markdown | Personal “working” experience |
-| **Personal CLI**       | `ingest`, `confirm`, `search`, `trace`                      | Personal Knowledge OS UX      |
-| **Schemas**            | [`schemas/`](../schemas/)                                   | Interoperability              |
-| **MCP egress (basic)** | `search_entities`, `get_decision_trace`, `list_evidence`    | Agent interoperability        |
-| **Docs & ontology**    | Architecture, ubiquitous language, knowledge model          | Community gravity             |
+| Area                   | Includes                                                                    | Rationale                     |
+| ---------------------- | --------------------------------------------------------------------------- | ----------------------------- |
+| **Kernel**             | Entity types, relations, event log contracts, idempotency                   | Trust and fork-resistant core |
+| **Connector SPI**      | API / Export / MCP as peer transports                                       | Ecosystem growth              |
+| **Basic connectors**   | ChatGPT export, GitHub (read-only / export), local Markdown                 | Personal “working” experience |
+| **Personal CLI**       | `ingest`, `confirm`, `search`, `trace`                                      | Personal Knowledge OS UX      |
+| **Schemas**            | [`schemas/`](../schemas/)                                                   | Interoperability              |
+| **MCP egress (basic)** | `search_entities`, `get_decision_trace`, `list_evidence`, `list_hypotheses` | Agent interoperability        |
+| **Docs & ontology**    | Architecture, ubiquitous language, knowledge model                          | Community gravity             |
 
 ---
 
