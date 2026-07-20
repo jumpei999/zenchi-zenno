@@ -6,7 +6,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "zenchi-mcp": "./dist/cli.js"
+    "zz-mcp": "./dist/cli.js"
   },
   "files": [
     "dist"

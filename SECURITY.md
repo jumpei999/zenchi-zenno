@@ -49,7 +49,7 @@ In scope:
 Out of scope (please use regular Issues):
 
 - Social engineering
-- Denial of service against a single user's local `.zenchi/` directory without a product defect
+- Denial of service against a single user's local `.zz/` directory without a product defect
 - Vulnerabilities in third-party services (GitHub, Google, Slack, etc.) unless zenchi-zenno misuses them
 - Issues requiring physical access to an unlocked machine
 

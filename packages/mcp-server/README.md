@@ -9,15 +9,15 @@ Exposes canonical knowledge tools over stdio (JSON-RPC):
 | `search_entities`    | Full-text search                                        |
 | `get_decision_trace` | Decision → evidence / `derived_from` / related entities |
 | `list_evidence`      | Evidence snippets for an entity id                      |
-| `list_hypotheses`    | Same as `zenchi confirm --list`                         |
+| `list_hypotheses`    | Same as `zz confirm --list`                             |
 
 ## Run
 
 ```bash
-# After pnpm build and zenchi init + ingest
-pnpm zenchi mcp
+# After pnpm build and zz init + ingest
+pnpm zz mcp
 # or
-pnpm --filter @zenchi-zenno/mcp-server exec zenchi-mcp --data-dir ./.zenchi
+pnpm --filter @zenchi-zenno/mcp-server exec zz-mcp --data-dir ./.zz
 ```
 
 Example Cursor / Claude MCP config:
@@ -30,7 +30,7 @@ Example Cursor / Claude MCP config:
       "args": [
         "packages/mcp-server/dist/cli.js",
         "--data-dir",
-        "/absolute/path/to/.zenchi"
+        "/absolute/path/to/.zz"
       ]
     }
   }

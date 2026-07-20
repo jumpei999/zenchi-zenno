@@ -1,6 +1,6 @@
 dist
 node_modules
-.zenchi
+.zz
 .review
 pnpm-lock.yaml
 *.ts

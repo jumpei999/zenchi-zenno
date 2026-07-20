@@ -27,40 +27,40 @@ zenchi-zenno continuously normalizes scattered activity signals — commits, doc
 | GitHub connector                              | Export + optional read-only REST API (`--repo` + token)                |
 | General entity graph (`get_entity_graph`)     | Not shipped — Decision-centric `trace` / MCP `get_decision_trace` only |
 | Google Drive / Gmail / Calendar               | **Phase 2**                                                            |
-| Auto-extract for Person / Interest / Learning | Manual `zenchi create` only in Phase 1                                 |
+| Auto-extract for Person / Interest / Learning | Manual `zz create` only in Phase 1                                     |
 
 ## Quick start
 
 ```bash
 pnpm install
 pnpm build
-pnpm zenchi --help
+pnpm zz --help
 
 # Ingest synthetic / export fixtures, then confirm and search
-pnpm zenchi init
-pnpm zenchi ingest --connector markdown-local --path ./fixtures/notes
-pnpm zenchi ingest --connector chatgpt-export --path ./fixtures/chatgpt-export
-pnpm zenchi ingest --connector github --path ./fixtures/github
+pnpm zz init
+pnpm zz ingest --connector markdown-local --path ./fixtures/notes
+pnpm zz ingest --connector chatgpt-export --path ./fixtures/chatgpt-export
+pnpm zz ingest --connector github --path ./fixtures/github
 
 # Network footprint (optional): recent commits/PRs via read-only GitHub API
-# export GITHUB_TOKEN=...   # or ZENCHI_GITHUB_TOKEN; scopes: contents:read, pull-requests:read
-# pnpm zenchi ingest --connector github --repo owner/name
+# export GITHUB_TOKEN=...   # or ZZ_GITHUB_TOKEN; scopes: contents:read, pull-requests:read
+# pnpm zz ingest --connector github --repo owner/name
 
 # Extractions are hypothesized — review evidence, then accept or reject
-pnpm zenchi confirm --list
-pnpm zenchi confirm --accept <entity-id>
+pnpm zz confirm --list
+pnpm zz confirm --accept <entity-id>
 
-pnpm zenchi search "postgres"
-pnpm zenchi trace --query "database"
+pnpm zz search "postgres"
+pnpm zz trace --query "database"
 
 # Manual entities (Person / Project / Interest / Learning)
-pnpm zenchi create --type Project --title "zenchi-zenno MVP" --goal "Ship Personal OS"
+pnpm zz create --type Project --title "zenchi-zenno MVP" --goal "Ship Personal OS"
 
 # Optional: MCP egress for agent clients (stdio)
-pnpm zenchi mcp
+pnpm zz mcp
 ```
 
-**Hypothesis → Confirmation:** Heuristic extractors never auto-confirm Decisions. Always review with `zenchi confirm` before treating knowledge as accepted.
+**Hypothesis → Confirmation:** Heuristic extractors never auto-confirm Decisions. Always review with `zz confirm` before treating knowledge as accepted.
 
 ## Scope continuum
 

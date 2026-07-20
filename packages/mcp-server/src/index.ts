@@ -65,7 +65,7 @@ const TOOLS = [
   {
     name: 'list_hypotheses',
     description:
-      'List hypothesized entities awaiting confirmation (same as `zenchi confirm --list`).',
+      'List hypothesized entities awaiting confirmation (same as `zz confirm --list`).',
     inputSchema: {
       type: 'object',
       properties: {
@@ -269,7 +269,7 @@ function handleRequest(
 }
 
 /**
- * Start a thin MCP egress server on stdio over the local `.zenchi` store.
+ * Start a thin MCP egress server on stdio over the local `.zz` store.
  */
 export async function startMcpServer(dataDir: string): Promise<void> {
   const store = openStore(dataDir);

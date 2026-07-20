@@ -2,18 +2,18 @@
 
 Phase 1 Personal MVP connectors. Transports are local/export by default; GitHub also supports an optional read-only REST API.
 
-| Package                                  | Transport                           | Observation types               | Live API                                          |
-| ---------------------------------------- | ----------------------------------- | ------------------------------- | ------------------------------------------------- |
-| `@zenchi-zenno/connector-markdown-local` | Local files                         | `doc.revision`, `meeting.notes` | N/A                                               |
-| `@zenchi-zenno/connector-chatgpt-export` | ChatGPT data export ZIP / JSON      | `ai.conversation`               | N/A                                               |
-| `@zenchi-zenno/connector-github`         | Export / fixture JSON **or** RO API | `code.change`, `code.review`    | Optional (`GITHUB_TOKEN` / `ZENCHI_GITHUB_TOKEN`) |
+| Package                                  | Transport                           | Observation types               | Live API                                      |
+| ---------------------------------------- | ----------------------------------- | ------------------------------- | --------------------------------------------- |
+| `@zenchi-zenno/connector-markdown-local` | Local files                         | `doc.revision`, `meeting.notes` | N/A                                           |
+| `@zenchi-zenno/connector-chatgpt-export` | ChatGPT data export ZIP / JSON      | `ai.conversation`               | N/A                                           |
+| `@zenchi-zenno/connector-github`         | Export / fixture JSON **or** RO API | `code.change`, `code.review`    | Optional (`GITHUB_TOKEN` / `ZZ_GITHUB_TOKEN`) |
 
 ## GitHub: export + optional read-only API
 
 ### Export / fixture mode
 
 ```bash
-pnpm zenchi ingest --connector github --path ./fixtures/github
+pnpm zz ingest --connector github --path ./fixtures/github
 ```
 
 Reads a synthetic or exported JSON fixture (see `fixtures/github/`). No network calls.
@@ -21,9 +21,9 @@ Reads a synthetic or exported JSON fixture (see `fixtures/github/`). No network 
 ### API mode (read-only)
 
 ```bash
-export GITHUB_TOKEN=ghp_...   # or ZENCHI_GITHUB_TOKEN
+export GITHUB_TOKEN=ghp_...   # or ZZ_GITHUB_TOKEN
 # PAT / fine-grained: contents:read, pull-requests:read
-pnpm zenchi ingest --connector github --repo owner/name
+pnpm zz ingest --connector github --repo owner/name
 # optional: --limit 30
 ```
 

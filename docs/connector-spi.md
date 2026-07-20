@@ -170,7 +170,7 @@ sequenceDiagram
 
 ## MCP egress (zenchi-zenno as server)
 
-Phase 1 ships a thin local MCP server (`@zenchi-zenno/mcp-server`, `zenchi mcp`) with:
+Phase 1 ships a thin local MCP server (`@zenchi-zenno/mcp-server`, `zz mcp`) with:
 
 | Tool                 | Description                                          |
 | -------------------- | ---------------------------------------------------- |

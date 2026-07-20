@@ -289,7 +289,7 @@ export function createGithubConnector(
       if (!input.path) {
         result.errors.push({
           message:
-            'Provide --path for export mode, or --repo with GITHUB_TOKEN / ZENCHI_GITHUB_TOKEN for API mode',
+            'Provide --path for export mode, or --repo with GITHUB_TOKEN / ZZ_GITHUB_TOKEN for API mode',
         });
         return result;
       }
