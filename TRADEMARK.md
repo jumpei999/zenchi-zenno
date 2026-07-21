@@ -1,5 +1,7 @@
 # Trademark Policy
 
+English | [日本語](TRADEMARK.ja.md)
+
 Policy for using the **zenchi-zenno** name, logos, and related marks.
 
 **Related:** [GOVERNANCE.md](GOVERNANCE.md) · [docs/commercial-boundary.md](docs/commercial-boundary.md)

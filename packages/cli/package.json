@@ -20,7 +20,8 @@
     "registry": "https://registry.npmjs.org"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "test": "node --test dist/i18n/**/*.test.js"
   },
   "dependencies": {
     "@zenchi-zenno/core": "workspace:*",

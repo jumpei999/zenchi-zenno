@@ -1,5 +1,7 @@
 # Connector SPI
 
+English | [日本語](connector-spi.ja.md)
+
 Service Provider Interface for ingesting knowledge from heterogeneous sources.
 
 **Related:** [ARCHITECTURE.md](ARCHITECTURE.md#8-mcp-integration-strategy) · [event-model.md](event-model.md) · [connectors/README.md](../connectors/README.md)

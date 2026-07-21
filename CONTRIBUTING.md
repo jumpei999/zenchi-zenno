@@ -1,5 +1,7 @@
 # Contributing to zenchi-zenno
 
+English | [日本語](CONTRIBUTING.ja.md)
+
 Thank you for your interest in zenchi-zenno. See also [GOVERNANCE.md](GOVERNANCE.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), [SECURITY.md](SECURITY.md), and [TRADEMARK.md](TRADEMARK.md).
 
 ## What to contribute now
@@ -26,6 +28,13 @@ pnpm zz ingest --connector markdown-local --path ./fixtures/notes
 pnpm zz confirm --list
 ```
 
+Japanese CLI UI (optional):
+
+```bash
+pnpm zz --lang ja --help
+ZZ_LANG=ja pnpm zz confirm --list
+```
+
 ### Hypothesis workflow
 
 Extracted entities start as **hypotheses**. Do not treat them as ground truth until confirmed:
@@ -40,6 +49,13 @@ pnpm zz mcp                            # local MCP egress for agents
 ```
 
 Low-confidence extracted entities should usually stay hypothesized until a human reviews the evidence.
+
+## Documentation languages
+
+- **English is canonical.** Japanese translations are published beside English files as `*.ja.md`.
+- When you edit an English document that has a Japanese sibling, update the matching `*.ja.md` in the **same PR**.
+- Do not add CI auto-translation. Cursor-assisted drafts are fine; humans review before merge.
+- Legal / governance Japanese pages are non-authoritative if they conflict with English.
 
 ## Code style
 

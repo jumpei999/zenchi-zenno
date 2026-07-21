@@ -1,9 +1,8 @@
 # [0.2.0](https://github.com/jumpei999/zenchi-zenno/compare/v0.1.0...v0.2.0) (2026-07-20)
 
-
 ### Features
 
-* GitHub read-only API ingest and eval UX ([#7](https://github.com/jumpei999/zenchi-zenno/issues/7)) ([ce5dcab](https://github.com/jumpei999/zenchi-zenno/commit/ce5dcab97f120ba747624eef7615822042236801))
+- GitHub read-only API ingest and eval UX ([#7](https://github.com/jumpei999/zenchi-zenno/issues/7)) ([ce5dcab](https://github.com/jumpei999/zenchi-zenno/commit/ce5dcab97f120ba747624eef7615822042236801))
 
 # Changelog
 

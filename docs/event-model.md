@@ -1,5 +1,7 @@
 # Event Model
 
+English | [日本語](event-model.ja.md)
+
 Specification for zenchi-zenno's append-only domain event log and ingestion lifecycle.
 
 **Related:** [ARCHITECTURE.md](ARCHITECTURE.md#6-event-model) · [knowledge-model.md](knowledge-model.md) · [schemas/domain-event.schema.json](../schemas/domain-event.schema.json)

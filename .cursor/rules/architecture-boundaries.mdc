@@ -9,5 +9,5 @@ alwaysApply: true
 - Ontology / SPI changes need migration notes or an RFC — do not silently break shapes.
 - Dependencies flow: connectors → connector-spi + core; projections → core; cli → packages + connectors.
 - Do not add cloud tenancy or multi-tenant assumptions to Personal MVP paths.
-- Docs: English is canonical; follow ubiquitous language (Event entity ≠ domain event).
+- Docs: English is canonical; Japanese siblings are `*.ja.md` (update in the same PR when the English file changes). Follow ubiquitous language (Event entity ≠ domain event).
 - Commits: Conventional Commits; use `pnpm commit` when unsure.

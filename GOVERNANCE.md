@@ -1,5 +1,7 @@
 # Governance
 
+English | [日本語](GOVERNANCE.ja.md)
+
 How decisions are made for the zenchi-zenno open-source project.
 
 **Related:** [CONTRIBUTING.md](CONTRIBUTING.md) · [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) · [SECURITY.md](SECURITY.md) · [docs/commercial-boundary.md](docs/commercial-boundary.md) · [TRADEMARK.md](TRADEMARK.md)

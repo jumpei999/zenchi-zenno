@@ -1,5 +1,7 @@
 # Agent skill: decision traceability
 
+English | [日本語](agent-skill-decision-trace.ja.md)
+
 **Question this skill answers:**
 
 > What did I decide about X, and what is the evidence?

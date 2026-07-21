@@ -19,485 +19,512 @@ import {
 } from '@zenchi-zenno/core';
 import { fullTextSearch } from '@zenchi-zenno/projections';
 import { Command } from 'commander';
+import { createT, resolveLocale, type TranslateFn } from './i18n/index.js';
 
 function defaultDataDir(): string {
   return resolve(process.cwd(), '.zz');
 }
 
-function openStore(dataDir?: string): KnowledgeStore {
-  const root = resolve(dataDir ?? defaultDataDir());
-  if (!existsSync(root)) {
-    console.error(`Workspace not initialized: ${root}\nRun: zz init`);
-    process.exit(1);
-  }
-  return new KnowledgeStore(root);
-}
-
-function getConnector(name: string): Connector {
-  switch (name) {
-    case 'markdown-local':
-      return createMarkdownLocalConnector();
-    case 'chatgpt-export':
-      return createChatgptExportConnector();
-    case 'github':
-      return createGithubConnector();
-    default:
-      console.error(`Unknown connector: ${name}`);
+function buildProgram(t: TranslateFn): Command {
+  function openStore(dataDir?: string): KnowledgeStore {
+    const root = resolve(dataDir ?? defaultDataDir());
+    if (!existsSync(root)) {
+      console.error(t('errors.workspace_missing', { root }));
       process.exit(1);
+    }
+    return new KnowledgeStore(root);
   }
-}
 
-function stateTag(e: Entity): string {
-  return e.confirmation_state === 'confirmed' ? '[confirmed]' : '[hypothesis]';
-}
-
-function formatEntityLine(e: Entity): string {
-  const band = confidenceLabel(e.confidence);
-  return `${stateTag(e)} ${e.type} ${e.id}\n  ${e.title}\n  confidence=${e.confidence ?? 'n/a'} (${band}) evidence=${e.evidence_refs.length}`;
-}
-
-function printHypothesisDetail(store: KnowledgeStore, e: Entity): void {
-  console.log('── Hypothesis ──');
-  console.log(`type: ${e.type}`);
-  console.log(`id: ${e.id}`);
-  console.log(`title: ${e.title}`);
-  if (e.summary) console.log(`summary: ${e.summary.slice(0, 280)}`);
-  console.log(
-    `confidence: ${e.confidence ?? 'n/a'} (${confidenceLabel(e.confidence)})`,
-  );
-  console.log(`status: ${e.status}`);
-  console.log(`extractor: ${e.provenance?.extractor ?? 'n/a'}`);
-  const links = listEvidenceForEntity(store, e.id);
-  if (!links.length) {
-    console.log('evidence: (none)');
-  } else {
-    for (const link of links) {
-      console.log('evidence:');
-      console.log(
-        `  source: ${link.observation?.source_system}/${link.observation?.source_type}`,
-      );
-      console.log(`  native_id: ${link.observation?.source_native_id ?? ''}`);
-      console.log(`  title: ${link.observation?.title ?? ''}`);
-      if (link.snippet) console.log(`  snippet: ${link.snippet}`);
+  function getConnector(name: string): Connector {
+    switch (name) {
+      case 'markdown-local':
+        return createMarkdownLocalConnector();
+      case 'chatgpt-export':
+        return createChatgptExportConnector();
+      case 'github':
+        return createGithubConnector();
+      default:
+        console.error(t('errors.unknown_connector', { name }));
+        process.exit(1);
     }
   }
-  console.log(
-    `actions: zz confirm --accept ${e.id}  |  zz confirm --reject ${e.id}`,
-  );
-  console.log('');
-}
 
-function parseEntityType(raw: string | undefined): EntityType | undefined {
-  if (!raw) return undefined;
-  if (!(ENTITY_TYPES as readonly string[]).includes(raw)) {
-    console.error(
-      `Unknown entity type: ${raw}\nValid: ${ENTITY_TYPES.join(', ')}`,
-    );
-    process.exit(1);
+  function stateTag(e: Entity): string {
+    return e.confirmation_state === 'confirmed'
+      ? '[confirmed]'
+      : '[hypothesis]';
   }
-  return raw as EntityType;
-}
 
-function setEntityConfirmation(
-  store: KnowledgeStore,
-  id: string,
-  state: 'confirmed' | 'rejected',
-): void {
-  const e = store.setConfirmation(id, state);
-  if (!e) {
-    console.error('Entity not found');
-    process.exit(1);
+  function formatEntityLine(e: Entity): string {
+    const band = confidenceLabel(e.confidence);
+    return t('format.entity_line', {
+      tag: stateTag(e),
+      type: e.type,
+      id: e.id,
+      title: e.title,
+      confidence: e.confidence ?? 'n/a',
+      band,
+      evidence: e.evidence_refs.length,
+    });
   }
-  const verb = state === 'confirmed' ? 'Confirmed' : 'Rejected';
-  console.log(`${verb} ${e.type} ${e.id}: ${e.title}`);
-}
 
-function bulkSetConfirmation(
-  store: KnowledgeStore,
-  hyps: Entity[],
-  state: 'confirmed' | 'rejected',
-): void {
-  const action = state === 'confirmed' ? 'accept' : 'reject';
-  if (!hyps.length) {
-    console.log(`No hypothesized entities to ${action}.`);
-    return;
-  }
-  const verb = state === 'confirmed' ? 'Confirmed' : 'Rejected';
-  for (const e of hyps) {
-    store.setConfirmation(e.id, state);
-    console.log(`${verb} ${e.type} ${e.id}: ${e.title}`);
-  }
-  const past = state === 'confirmed' ? 'Accepted' : 'Rejected';
-  console.log(`${past} ${hyps.length} hypotheses.`);
-}
-
-function listHypotheses(store: KnowledgeStore, type?: EntityType): void {
-  const hyps = store.listHypotheses(type);
-  if (!hyps.length) {
-    console.log('No hypothesized entities.');
-    return;
-  }
-  console.log(
-    `${hyps.length} hypothesized entit${hyps.length === 1 ? 'y' : 'ies'} (not yet confirmed):\n`,
-  );
-  for (const e of hyps) {
-    printHypothesisDetail(store, e);
-  }
-  console.log(
-    'Tip: low-confidence extractions entities stay hypothesized until you accept them.',
-  );
-}
-
-const program = new Command();
-program
-  .name('zz')
-  .description('zenchi-zenno Personal Knowledge OS CLI (OSS, local-first)')
-  .version('0.1.0');
-
-program
-  .command('init')
-  .description('Initialize a personal workspace under .zz/')
-  .option('-d, --data-dir <path>', 'workspace directory', defaultDataDir())
-  .option('-n, --name <name>', 'workspace name', 'personal')
-  .action((opts: { dataDir: string; name: string }) => {
-    const store = KnowledgeStore.init(resolve(opts.dataDir), opts.name);
+  function printHypothesisDetail(store: KnowledgeStore, e: Entity): void {
+    console.log(t('confirm.hypothesis_header'));
+    console.log(`${t('labels.type')}: ${e.type}`);
+    console.log(`${t('labels.id')}: ${e.id}`);
+    console.log(`${t('labels.title')}: ${e.title}`);
+    if (e.summary) {
+      console.log(`${t('labels.summary')}: ${e.summary.slice(0, 280)}`);
+    }
     console.log(
-      `Initialized workspace ${store.workspace.id} at ${resolve(opts.dataDir)}`,
+      `${t('labels.confidence')}: ${e.confidence ?? 'n/a'} (${confidenceLabel(e.confidence)})`,
     );
-  });
-
-program
-  .command('ingest')
-  .description('Ingest observations via a connector and extract hypotheses')
-  .requiredOption(
-    '-c, --connector <id>',
-    'markdown-local | chatgpt-export | github',
-  )
-  .option(
-    '-p, --path <path>',
-    'export path or directory (required except github API mode)',
-  )
-  .option(
-    '--repo <owner/name>',
-    'GitHub API mode: repository (uses GITHUB_TOKEN or ZZ_GITHUB_TOKEN)',
-  )
-  .option(
-    '--limit <n>',
-    'GitHub API mode: max commits/PRs per type (default 30)',
-    '30',
-  )
-  .option('-d, --data-dir <path>', 'workspace directory', defaultDataDir())
-  .action(
-    async (opts: {
-      connector: string;
-      path?: string;
-      repo?: string;
-      limit: string;
-      dataDir: string;
-    }) => {
-      const store = openStore(opts.dataDir);
-      const connector = getConnector(opts.connector);
-      const token =
-        process.env.ZZ_GITHUB_TOKEN ?? process.env.GITHUB_TOKEN ?? undefined;
-      const useGithubApi =
-        opts.connector === 'github' && Boolean(opts.repo) && Boolean(token);
-
-      if (opts.connector === 'github' && opts.repo && !token) {
-        console.error(
-          'GitHub API mode requires GITHUB_TOKEN or ZZ_GITHUB_TOKEN in the environment.',
+    console.log(`${t('labels.status')}: ${e.status}`);
+    console.log(
+      `${t('labels.extractor')}: ${e.provenance?.extractor ?? 'n/a'}`,
+    );
+    const links = listEvidenceForEntity(store, e.id);
+    if (!links.length) {
+      console.log(t('labels.evidence_none'));
+    } else {
+      for (const link of links) {
+        console.log(`${t('labels.evidence')}:`);
+        console.log(
+          `  ${t('labels.source')}: ${link.observation?.source_system}/${link.observation?.source_type}`,
         );
-        process.exit(1);
-      }
-      if (!useGithubApi && !opts.path) {
-        console.error(
-          'Provide --path for export/local connectors, or --repo with a GitHub token for API mode.',
+        console.log(
+          `  ${t('labels.native_id')}: ${link.observation?.source_native_id ?? ''}`,
         );
-        process.exit(1);
-      }
-
-      const limit = Number.parseInt(opts.limit, 10);
-      const correlation = `sync-${Date.now()}`;
-      store.appendEvent(
-        'SyncStarted',
-        {
-          connector: opts.connector,
-          path: opts.path,
-          repo: opts.repo,
-          mode: useGithubApi ? 'api' : 'export',
-        },
-        {
-          correlation_id: correlation,
-        },
-      );
-
-      const sync = await connector.sync({
-        path: opts.path ? resolve(opts.path) : undefined,
-        workspace_id: store.workspace.id,
-        token: useGithubApi ? token : undefined,
-        repo: useGithubApi ? opts.repo : undefined,
-        limit: Number.isFinite(limit) ? limit : 30,
-      });
-
-      let ingested = 0;
-      let skipped = 0;
-      let extracted = 0;
-
-      for (const record of sync.records) {
-        const saved = store.storeSourceRecord(
-          record.body,
-          record.source_native_id,
-          record.checksum,
-          record.media_type,
-        );
-        const obs = {
-          ...record.observation,
-          content_ref: saved.content_ref,
-          id: record.observation.id,
-        };
-        const stored = store.ingestObservation(obs);
-        if (!stored) {
-          skipped += 1;
-          continue;
+        console.log(`  ${t('labels.title')}: ${link.observation?.title ?? ''}`);
+        if (link.snippet) {
+          console.log(`  ${t('labels.snippet')}: ${link.snippet}`);
         }
-        ingested += 1;
-        const result = extractFromObservation(store, stored);
-        applyExtract(store, result);
-        extracted += result.entities.length;
       }
-
-      store.appendEvent(
-        'SyncCompleted',
-        {
-          connector: opts.connector,
-          ingested,
-          skipped,
-          extracted,
-          errors: sync.errors,
-          mode: useGithubApi ? 'api' : 'export',
-        },
-        { correlation_id: correlation },
-      );
-
-      console.log(
-        JSON.stringify(
-          {
-            connector: opts.connector,
-            mode: useGithubApi ? 'api' : 'export',
-            repo: opts.repo,
-            ingested,
-            skipped_duplicates: skipped,
-            entities_extracted: extracted,
-            errors: sync.errors,
-            note: 'Extracted entities are hypothesized until you confirm them. Review with: zz confirm --list',
-          },
-          null,
-          2,
-        ),
-      );
-    },
-  );
-
-program
-  .command('search')
-  .description('Full-text search over canonical entities')
-  .argument('<query>', 'search query')
-  .option('-d, --data-dir <path>', 'workspace directory', defaultDataDir())
-  .option('--type <type>', 'filter by entity type')
-  .action((query: string, opts: { dataDir: string; type?: string }) => {
-    const store = openStore(opts.dataDir);
-    const type = parseEntityType(opts.type);
-    let hits = fullTextSearch(store.entities, query);
-    if (type) hits = hits.filter((e) => e.type === type);
-    for (const e of hits) {
-      console.log(formatEntityLine(e));
     }
-    if (!hits.length) console.log('No matches.');
-  });
+    console.log(
+      `${t('labels.actions')}: zz confirm --accept ${e.id}  |  zz confirm --reject ${e.id}`,
+    );
+    console.log('');
+  }
 
-program
-  .command('trace')
-  .description(
-    'Decision archaeology: walk Decision → evidence, derived_from, related entities',
-  )
-  .requiredOption('-q, --query <query>', 'topic or keyword')
-  .option('-d, --data-dir <path>', 'workspace directory', defaultDataDir())
-  .action((opts: { query: string; dataDir: string }) => {
-    const store = openStore(opts.dataDir);
-    const { nodes } = decisionTrace(store, opts.query);
-    if (!nodes.length) {
-      console.log(
-        'No Decision entities matched. Try a broader query or ingest more sources.',
+  function parseEntityType(raw: string | undefined): EntityType | undefined {
+    if (!raw) return undefined;
+    if (!(ENTITY_TYPES as readonly string[]).includes(raw)) {
+      console.error(
+        t('errors.unknown_entity_type', {
+          raw,
+          valid: ENTITY_TYPES.join(', '),
+        }),
       );
+      process.exit(1);
+    }
+    return raw as EntityType;
+  }
+
+  function setEntityConfirmation(
+    store: KnowledgeStore,
+    id: string,
+    state: 'confirmed' | 'rejected',
+  ): void {
+    const e = store.setConfirmation(id, state);
+    if (!e) {
+      console.error(t('confirm.entity_not_found'));
+      process.exit(1);
+    }
+    const key =
+      state === 'confirmed' ? 'confirm.confirmed' : 'confirm.rejected';
+    console.log(t(key, { type: e.type, id: e.id, title: e.title }));
+  }
+
+  function bulkSetConfirmation(
+    store: KnowledgeStore,
+    hyps: Entity[],
+    state: 'confirmed' | 'rejected',
+  ): void {
+    const action = state === 'confirmed' ? 'accept' : 'reject';
+    if (!hyps.length) {
+      console.log(t('confirm.none_to_action', { action }));
       return;
     }
-    for (const node of nodes) {
-      const d = node.decision;
-      console.log('── Decision ──');
-      console.log(`id: ${d.id}`);
-      console.log(
-        `state: ${d.confirmation_state} (status=${d.status}) confidence=${d.confidence ?? 'n/a'} (${confidenceLabel(d.confidence)})`,
-      );
-      console.log(`title: ${d.title}`);
-      console.log(`summary: ${d.summary ?? ''}`);
-
-      for (const m of node.evidence) {
-        console.log('  evidence:');
-        console.log(
-          `    observation: ${m.observation?.source_system}/${m.observation?.source_type}`,
-        );
-        console.log(`    native_id: ${m.observation?.source_native_id}`);
-        console.log(`    title: ${m.observation?.title ?? ''}`);
-        console.log(`    snippet: ${m.snippet}`);
-      }
-
-      for (const edge of node.derived_from) {
-        console.log('  derived_from:');
-        console.log(`    relation: ${edge.relation.id}`);
-        console.log(
-          `    observation: ${edge.observation?.source_native_id ?? edge.relation.to_id}`,
-        );
-        console.log(`    title: ${edge.observation?.title ?? ''}`);
-      }
-
-      if (node.related_entities.length) {
-        console.log('  related_entities (shared evidence):');
-        for (const rel of node.related_entities) {
-          console.log(
-            `    ${stateTag(rel)} ${rel.type} ${rel.id} — ${rel.title}`,
-          );
-        }
-      }
-      console.log('');
+    const key =
+      state === 'confirmed' ? 'confirm.confirmed' : 'confirm.rejected';
+    for (const e of hyps) {
+      store.setConfirmation(e.id, state);
+      console.log(t(key, { type: e.type, id: e.id, title: e.title }));
     }
-  });
+    const summaryKey =
+      state === 'confirmed' ? 'confirm.accepted_n' : 'confirm.rejected_n';
+    console.log(t(summaryKey, { count: hyps.length }));
+  }
 
-program
-  .command('confirm')
-  .description(
-    'List or resolve hypothesized entities (extraction is never auto-confirmed)',
-  )
-  .option('-d, --data-dir <path>', 'workspace directory', defaultDataDir())
-  .option('-l, --list', 'list hypothesized entities with evidence (default)')
-  .option('--type <type>', 'filter by entity type')
-  .option('--accept <id>', 'confirm entity id')
-  .option('--reject <id>', 'reject entity id')
-  .option('--accept-all', 'confirm all listed hypotheses (respects --type)')
-  .option('--reject-all', 'reject all listed hypotheses (respects --type)')
-  .action(
-    (opts: {
-      dataDir: string;
-      list?: boolean;
-      type?: string;
-      accept?: string;
-      reject?: string;
-      acceptAll?: boolean;
-      rejectAll?: boolean;
-    }) => {
-      const store = openStore(opts.dataDir);
-      const type = parseEntityType(opts.type);
+  function listHypotheses(store: KnowledgeStore, type?: EntityType): void {
+    const hyps = store.listHypotheses(type);
+    if (!hyps.length) {
+      console.log(t('confirm.no_hypotheses'));
+      return;
+    }
+    console.log(
+      hyps.length === 1
+        ? t('confirm.list_count_one')
+        : t('confirm.list_count', { count: hyps.length }),
+    );
+    for (const e of hyps) {
+      printHypothesisDetail(store, e);
+    }
+    console.log(t('confirm.tip_low_confidence'));
+  }
 
-      if (opts.accept) {
-        setEntityConfirmation(store, opts.accept, 'confirmed');
-        return;
-      }
-      if (opts.reject) {
-        setEntityConfirmation(store, opts.reject, 'rejected');
-        return;
-      }
-      if (opts.acceptAll) {
-        bulkSetConfirmation(store, store.listHypotheses(type), 'confirmed');
-        return;
-      }
-      if (opts.rejectAll) {
-        bulkSetConfirmation(store, store.listHypotheses(type), 'rejected');
-        return;
-      }
+  const program = new Command();
+  program
+    .name('zz')
+    .description(t('cli.description'))
+    .version('0.1.0')
+    .option('--lang <locale>', t('cli.lang_option'));
 
-      listHypotheses(store, type);
-    },
-  );
+  program
+    .command('init')
+    .description(t('init.description'))
+    .option('-d, --data-dir <path>', t('option.data_dir'), defaultDataDir())
+    .option('-n, --name <name>', t('option.workspace_name'), 'personal')
+    .action((opts: { dataDir: string; name: string }) => {
+      const store = KnowledgeStore.init(resolve(opts.dataDir), opts.name);
+      console.log(
+        t('init.initialized', {
+          id: store.workspace.id,
+          path: resolve(opts.dataDir),
+        }),
+      );
+    });
 
-program
-  .command('create')
-  .description(
-    'Manually create a confirmed entity (Person/Project/Interest/Learning, or any type)',
-  )
-  .requiredOption(
-    '-t, --type <type>',
-    `entity type (${MANUAL_ENTITY_TYPES.join(' | ')} | …)`,
-  )
-  .requiredOption('--title <title>', 'entity title')
-  .option('-d, --data-dir <path>', 'workspace directory', defaultDataDir())
-  .option('--summary <text>', 'short summary')
-  .option('--status <status>', 'lifecycle status')
-  .option(
-    '--tag <tag>',
-    'tag (repeatable)',
-    (v: string, acc: string[]) => {
-      acc.push(v);
-      return acc;
-    },
-    [] as string[],
-  )
-  .option('--goal <goal>', 'Project.goal attribute')
-  .option('--identity <kind:value>', 'Person identity key (e.g. github:ada)')
-  .action(
-    (opts: {
-      dataDir: string;
-      type: string;
-      title: string;
-      summary?: string;
-      status?: string;
-      tag: string[];
-      goal?: string;
-      identity?: string;
-    }) => {
-      const store = openStore(opts.dataDir);
-      const type = parseEntityType(opts.type);
-      if (!type) process.exit(1);
+  program
+    .command('ingest')
+    .description(t('ingest.description'))
+    .requiredOption('-c, --connector <id>', t('ingest.option.connector'))
+    .option('-p, --path <path>', t('ingest.option.path'))
+    .option('--repo <owner/name>', t('ingest.option.repo'))
+    .option('--limit <n>', t('ingest.option.limit'), '30')
+    .option('-d, --data-dir <path>', t('option.data_dir'), defaultDataDir())
+    .action(
+      async (opts: {
+        connector: string;
+        path?: string;
+        repo?: string;
+        limit: string;
+        dataDir: string;
+      }) => {
+        const store = openStore(opts.dataDir);
+        const connector = getConnector(opts.connector);
+        const token =
+          process.env.ZZ_GITHUB_TOKEN ?? process.env.GITHUB_TOKEN ?? undefined;
+        const useGithubApi =
+          opts.connector === 'github' && Boolean(opts.repo) && Boolean(token);
 
-      const attributes: Record<string, unknown> = {};
-      if (opts.goal) attributes.goal = opts.goal;
-      if (opts.identity) {
-        const [kind, ...rest] = opts.identity.split(':');
-        const value = rest.join(':');
-        if (!kind || !value) {
-          console.error('identity must be kind:value (e.g. github:ada)');
+        if (opts.connector === 'github' && opts.repo && !token) {
+          console.error(t('ingest.error.token_required'));
           process.exit(1);
         }
-        attributes.identity_keys = [{ kind, value }];
+        if (!useGithubApi && !opts.path) {
+          console.error(t('ingest.error.path_or_repo'));
+          process.exit(1);
+        }
+
+        const limit = Number.parseInt(opts.limit, 10);
+        const correlation = `sync-${Date.now()}`;
+        store.appendEvent(
+          'SyncStarted',
+          {
+            connector: opts.connector,
+            path: opts.path,
+            repo: opts.repo,
+            mode: useGithubApi ? 'api' : 'export',
+          },
+          {
+            correlation_id: correlation,
+          },
+        );
+
+        const sync = await connector.sync({
+          path: opts.path ? resolve(opts.path) : undefined,
+          workspace_id: store.workspace.id,
+          token: useGithubApi ? token : undefined,
+          repo: useGithubApi ? opts.repo : undefined,
+          limit: Number.isFinite(limit) ? limit : 30,
+        });
+
+        let ingested = 0;
+        let skipped = 0;
+        let extracted = 0;
+
+        for (const record of sync.records) {
+          const saved = store.storeSourceRecord(
+            record.body,
+            record.source_native_id,
+            record.checksum,
+            record.media_type,
+          );
+          const obs = {
+            ...record.observation,
+            content_ref: saved.content_ref,
+            id: record.observation.id,
+          };
+          const stored = store.ingestObservation(obs);
+          if (!stored) {
+            skipped += 1;
+            continue;
+          }
+          ingested += 1;
+          const result = extractFromObservation(store, stored);
+          applyExtract(store, result);
+          extracted += result.entities.length;
+        }
+
+        store.appendEvent(
+          'SyncCompleted',
+          {
+            connector: opts.connector,
+            ingested,
+            skipped,
+            extracted,
+            errors: sync.errors,
+            mode: useGithubApi ? 'api' : 'export',
+          },
+          { correlation_id: correlation },
+        );
+
+        console.log(
+          JSON.stringify(
+            {
+              connector: opts.connector,
+              mode: useGithubApi ? 'api' : 'export',
+              repo: opts.repo,
+              ingested,
+              skipped_duplicates: skipped,
+              entities_extracted: extracted,
+              errors: sync.errors,
+              note: t('ingest.note_review'),
+            },
+            null,
+            2,
+          ),
+        );
+      },
+    );
+
+  program
+    .command('search')
+    .description(t('search.description'))
+    .argument('<query>', t('search.argument.query'))
+    .option('-d, --data-dir <path>', t('option.data_dir'), defaultDataDir())
+    .option('--type <type>', t('option.entity_type'))
+    .action((query: string, opts: { dataDir: string; type?: string }) => {
+      const store = openStore(opts.dataDir);
+      const type = parseEntityType(opts.type);
+      let hits = fullTextSearch(store.entities, query);
+      if (type) hits = hits.filter((e) => e.type === type);
+      for (const e of hits) {
+        console.log(formatEntityLine(e));
       }
+      if (!hits.length) console.log(t('search.no_matches'));
+    });
 
-      const entity = store.createManualEntity({
-        type,
-        title: opts.title,
-        summary: opts.summary,
-        status: opts.status,
-        tags: opts.tag.length ? opts.tag : undefined,
-        attributes: Object.keys(attributes).length ? attributes : undefined,
-      });
-      console.log(
-        `Created [confirmed] ${entity.type} ${entity.id}\n  ${entity.title}`,
-      );
-    },
-  );
+  program
+    .command('trace')
+    .description(t('trace.description'))
+    .requiredOption('-q, --query <query>', t('trace.option.query'))
+    .option('-d, --data-dir <path>', t('option.data_dir'), defaultDataDir())
+    .action((opts: { query: string; dataDir: string }) => {
+      const store = openStore(opts.dataDir);
+      const { nodes } = decisionTrace(store, opts.query);
+      if (!nodes.length) {
+        console.log(t('trace.no_matches'));
+        return;
+      }
+      for (const node of nodes) {
+        const d = node.decision;
+        console.log(t('trace.decision_header'));
+        console.log(`${t('labels.id')}: ${d.id}`);
+        console.log(
+          t('format.state_line', {
+            state: d.confirmation_state,
+            status: d.status,
+            confidence: d.confidence ?? 'n/a',
+            band: confidenceLabel(d.confidence),
+          }),
+        );
+        console.log(`${t('labels.title')}: ${d.title}`);
+        console.log(`${t('labels.summary')}: ${d.summary ?? ''}`);
 
-program
-  .command('export')
-  .description('Export canonical knowledge JSON (data portability)')
-  .option('-d, --data-dir <path>', 'workspace directory', defaultDataDir())
-  .action((opts: { dataDir: string }) => {
-    const store = openStore(opts.dataDir);
-    console.log(JSON.stringify(store.exportCanonical(), null, 2));
-  });
+        for (const m of node.evidence) {
+          console.log(`  ${t('labels.evidence')}:`);
+          console.log(
+            `    ${t('labels.observation')}: ${m.observation?.source_system}/${m.observation?.source_type}`,
+          );
+          console.log(
+            `    ${t('labels.native_id')}: ${m.observation?.source_native_id}`,
+          );
+          console.log(
+            `    ${t('labels.title')}: ${m.observation?.title ?? ''}`,
+          );
+          console.log(`    ${t('labels.snippet')}: ${m.snippet}`);
+        }
 
-program
-  .command('mcp')
-  .description('Start local MCP egress server (stdio) for agent clients')
-  .option('-d, --data-dir <path>', 'workspace directory', defaultDataDir())
-  .action(async (opts: { dataDir: string }) => {
-    const { startMcpServer } = await import('@zenchi-zenno/mcp-server');
-    await startMcpServer(resolve(opts.dataDir));
-  });
+        for (const edge of node.derived_from) {
+          console.log(`  derived_from:`);
+          console.log(`    ${t('labels.relation')}: ${edge.relation.id}`);
+          console.log(
+            `    ${t('labels.observation')}: ${edge.observation?.source_native_id ?? edge.relation.to_id}`,
+          );
+          console.log(
+            `    ${t('labels.title')}: ${edge.observation?.title ?? ''}`,
+          );
+        }
 
-program.parseAsync(process.argv);
+        if (node.related_entities.length) {
+          console.log(t('trace.related_entities'));
+          for (const rel of node.related_entities) {
+            console.log(
+              `    ${stateTag(rel)} ${rel.type} ${rel.id} — ${rel.title}`,
+            );
+          }
+        }
+        console.log('');
+      }
+    });
+
+  program
+    .command('confirm')
+    .description(t('confirm.description'))
+    .option('-d, --data-dir <path>', t('option.data_dir'), defaultDataDir())
+    .option('-l, --list', t('confirm.option.list'))
+    .option('--type <type>', t('option.entity_type'))
+    .option('--accept <id>', t('confirm.option.accept'))
+    .option('--reject <id>', t('confirm.option.reject'))
+    .option('--accept-all', t('confirm.option.accept_all'))
+    .option('--reject-all', t('confirm.option.reject_all'))
+    .action(
+      (opts: {
+        dataDir: string;
+        list?: boolean;
+        type?: string;
+        accept?: string;
+        reject?: string;
+        acceptAll?: boolean;
+        rejectAll?: boolean;
+      }) => {
+        const store = openStore(opts.dataDir);
+        const type = parseEntityType(opts.type);
+
+        if (opts.accept) {
+          setEntityConfirmation(store, opts.accept, 'confirmed');
+          return;
+        }
+        if (opts.reject) {
+          setEntityConfirmation(store, opts.reject, 'rejected');
+          return;
+        }
+        if (opts.acceptAll) {
+          bulkSetConfirmation(store, store.listHypotheses(type), 'confirmed');
+          return;
+        }
+        if (opts.rejectAll) {
+          bulkSetConfirmation(store, store.listHypotheses(type), 'rejected');
+          return;
+        }
+
+        listHypotheses(store, type);
+      },
+    );
+
+  program
+    .command('create')
+    .description(t('create.description'))
+    .requiredOption(
+      '-t, --type <type>',
+      t('create.option.type', {
+        types: `${MANUAL_ENTITY_TYPES.join(' | ')} | …`,
+      }),
+    )
+    .requiredOption('--title <title>', t('create.option.title'))
+    .option('-d, --data-dir <path>', t('option.data_dir'), defaultDataDir())
+    .option('--summary <text>', t('create.option.summary'))
+    .option('--status <status>', t('create.option.status'))
+    .option(
+      '--tag <tag>',
+      t('create.option.tag'),
+      (v: string, acc: string[]) => {
+        acc.push(v);
+        return acc;
+      },
+      [] as string[],
+    )
+    .option('--goal <goal>', t('create.option.goal'))
+    .option('--identity <kind:value>', t('create.option.identity'))
+    .action(
+      (opts: {
+        dataDir: string;
+        type: string;
+        title: string;
+        summary?: string;
+        status?: string;
+        tag: string[];
+        goal?: string;
+        identity?: string;
+      }) => {
+        const store = openStore(opts.dataDir);
+        const type = parseEntityType(opts.type);
+        if (!type) process.exit(1);
+
+        const attributes: Record<string, unknown> = {};
+        if (opts.goal) attributes.goal = opts.goal;
+        if (opts.identity) {
+          const [kind, ...rest] = opts.identity.split(':');
+          const value = rest.join(':');
+          if (!kind || !value) {
+            console.error(t('create.error.identity'));
+            process.exit(1);
+          }
+          attributes.identity_keys = [{ kind, value }];
+        }
+
+        const entity = store.createManualEntity({
+          type,
+          title: opts.title,
+          summary: opts.summary,
+          status: opts.status,
+          tags: opts.tag.length ? opts.tag : undefined,
+          attributes: Object.keys(attributes).length ? attributes : undefined,
+        });
+        console.log(
+          t('create.created', {
+            type: entity.type,
+            id: entity.id,
+            title: entity.title,
+          }),
+        );
+      },
+    );
+
+  program
+    .command('export')
+    .description(t('export.description'))
+    .option('-d, --data-dir <path>', t('option.data_dir'), defaultDataDir())
+    .action((opts: { dataDir: string }) => {
+      const store = openStore(opts.dataDir);
+      console.log(JSON.stringify(store.exportCanonical(), null, 2));
+    });
+
+  program
+    .command('mcp')
+    .description(t('mcp.description'))
+    .option('-d, --data-dir <path>', t('option.data_dir'), defaultDataDir())
+    .action(async (opts: { dataDir: string }) => {
+      const { startMcpServer } = await import('@zenchi-zenno/mcp-server');
+      await startMcpServer(resolve(opts.dataDir));
+    });
+
+  return program;
+}
+
+const locale = resolveLocale();
+const t = createT(locale);
+await buildProgram(t).parseAsync(process.argv);
