@@ -1,3 +1,10 @@
+# [0.3.0](https://github.com/jumpei999/zenchi-zenno/compare/v0.2.0...v0.3.0) (2026-07-21)
+
+
+### Features
+
+* CLI i18n and formal Japanese docs (*.ja.md) ([#9](https://github.com/jumpei999/zenchi-zenno/issues/9)) ([1ddb60c](https://github.com/jumpei999/zenchi-zenno/commit/1ddb60cfa7ac6f431ca4d1adebbced727921ef15))
+
 # [0.2.0](https://github.com/jumpei999/zenchi-zenno/compare/v0.1.0...v0.2.0) (2026-07-20)
 
 ### Features
