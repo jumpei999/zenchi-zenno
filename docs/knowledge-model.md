@@ -1,5 +1,7 @@
 # Knowledge Model
 
+English | [日本語](knowledge-model.ja.md)
+
 Deep specification for zenchi-zenno's canonical knowledge ontology.
 
 **Related:** [ARCHITECTURE.md](ARCHITECTURE.md#5-knowledge-model) · [ubiquitous-language.md](ubiquitous-language.md) · [schemas/entity.base.schema.json](../schemas/entity.base.schema.json)

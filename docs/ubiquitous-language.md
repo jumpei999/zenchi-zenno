@@ -1,5 +1,7 @@
 # Ubiquitous Language
 
+English | [日本語](ubiquitous-language.ja.md)
+
 This glossary defines terms used consistently across zenchi-zenno. When in doubt, prefer these definitions over colloquial synonyms.
 
 **Related:** [ARCHITECTURE.md](ARCHITECTURE.md) · [knowledge-model.md](knowledge-model.md) · [event-model.md](event-model.md)

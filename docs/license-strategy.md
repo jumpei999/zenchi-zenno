@@ -1,5 +1,7 @@
 # License Strategy
 
+English | [日本語](license-strategy.ja.md)
+
 Decision record for OSS licensing and the future commercial repository.
 
 **Status:** Decided for Phase 0–1; revisit **before Phase 2 (Team / Cloud)** implementation.  

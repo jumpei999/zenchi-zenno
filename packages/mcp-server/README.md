@@ -1,5 +1,7 @@
 # @zenchi-zenno/mcp-server
 
+English | [日本語](README.ja.md)
+
 Local MCP **egress** for zenchi-zenno Personal MVP.
 
 Exposes canonical knowledge tools over stdio (JSON-RPC):

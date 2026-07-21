@@ -1,5 +1,7 @@
 # Security Policy
 
+English | [日本語](SECURITY.ja.md)
+
 zenchi-zenno is a local-first knowledge operating system. Security issues may affect **personal knowledge stores**, connector credentials, and ingestion pipelines. Please report vulnerabilities responsibly.
 
 ## Supported versions

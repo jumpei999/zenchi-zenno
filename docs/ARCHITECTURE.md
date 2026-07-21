@@ -1,5 +1,7 @@
 # zenchi-zenno Architecture
 
+English | [日本語](ARCHITECTURE.ja.md)
+
 **Document status:** Draft v0.3 (Phase 1 — Personal MVP **usable**; Phase 1→2 gate passed for Personal)  
 **Codename:** zenchi-zenno  
 **Scope continuum:** Personal Knowledge OS → Project Knowledge OS  

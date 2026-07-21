@@ -1,5 +1,7 @@
 # zenchi-zenno
 
+English | [日本語](README.ja.md)
+
 **zenchi-zenno — a canonical knowledge operating system**
 
 _全知全能の知識 OS へ — toward omniscient, actionable knowledge._
@@ -36,6 +38,10 @@ pnpm install
 pnpm build
 pnpm zz --help
 
+# Japanese CLI UI (optional): --lang ja, or ZZ_LANG=ja, or LANG=ja_JP.UTF-8
+# pnpm zz --lang ja --help
+# ZZ_LANG=ja pnpm zz confirm --list
+
 # Ingest synthetic / export fixtures, then confirm and search
 pnpm zz init
 pnpm zz ingest --connector markdown-local --path ./fixtures/notes
@@ -61,6 +67,13 @@ pnpm zz mcp
 ```
 
 **Hypothesis → Confirmation:** Heuristic extractors never auto-confirm Decisions. Always review with `zz confirm` before treating knowledge as accepted.
+
+## Languages
+
+- **English** is canonical for documentation and domain identifiers.
+- **Japanese** translations live next to their English counterparts as `*.ja.md` (for example [README.ja.md](README.ja.md)).
+- When you change an English doc that has a Japanese sibling, update the `*.ja.md` file in the same PR.
+- CLI display language: `--lang ja` or `ZZ_LANG=ja` (does not change JSON keys or entity type names).
 
 ## Scope continuum
 

@@ -1,5 +1,7 @@
 # Commercial Boundary
 
+English | [日本語](commercial-boundary.ja.md)
+
 Official definition of what is open-source versus commercial in the zenchi-zenno hybrid strategy.
 
 **Related:** [ARCHITECTURE.md](ARCHITECTURE.md) · [GOVERNANCE.md](../GOVERNANCE.md) · [TRADEMARK.md](../TRADEMARK.md) · [license-strategy.md](license-strategy.md)

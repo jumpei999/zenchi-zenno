@@ -1,5 +1,7 @@
 # Connectors
 
+English | [日本語](README.ja.md)
+
 Phase 1 Personal MVP connectors. Transports are local/export by default; GitHub also supports an optional read-only REST API.
 
 | Package                                  | Transport                           | Observation types               | Live API                                      |
