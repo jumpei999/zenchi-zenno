@@ -621,6 +621,7 @@ Compared to "second brain", note-sync, and RAG-memory tools:
 | Shipped                                       | Deferred (labeled)                        |
 | --------------------------------------------- | ----------------------------------------- |
 | Confirm UX with evidence + confidence bands   | Google suite (Phase 2)                    |
+| Observation Artifacts auto-confirmed (facts)  | Smart Decision extract from GitHub text   |
 | Heuristic extract with confidence labels      | General `get_entity_graph` MCP tool       |
 | `zz trace` / MCP `get_decision_trace`         | Slack / Discord                           |
 | GitHub export + optional RO API               | Auto-extract Person / Interest / Learning |

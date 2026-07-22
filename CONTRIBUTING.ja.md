@@ -39,18 +39,18 @@ ZZ_LANG=ja pnpm zz confirm --list
 
 ### 仮説ワークフロー
 
-抽出されたエンティティは **仮説** から始まります。確認するまで真実として扱わないでください:
+ソースから抽出された **Decision** / **Idea** は **仮説** から始まります。確認するまで真実として扱わないでください。ソース由来の **Artifact**（commit・文書・チャット）は観測事実として自動確定され、既定の confirm キューには出ません。
 
 ```bash
-pnpm zz confirm --list                 # Evidence + confidence 帯
+pnpm zz confirm --list                 # Decision/Idea + Evidence + confidence 帯
 pnpm zz confirm --accept <id>          # 単体 accept
-pnpm zz confirm --reject <id>          # 単体 reject
+pnpm zz confirm --reject <id>          # 単体 reject（既定検索から除外）
 pnpm zz confirm --accept-all --type Decision   # 一括（慎重に）
 pnpm zz create --type Person --title "Ada" --identity github:ada
 pnpm zz mcp                            # エージェント向けローカル MCP egress
 ```
 
-低信頼度で抽出されたエンティティは、人間が Evidence をレビューするまで通常は仮説のままにしてください。
+低信頼度の Decision/Idea 仮説は、人間が Evidence をレビューするまで通常は仮説のままにしてください。
 
 ## ドキュメントの言語
 

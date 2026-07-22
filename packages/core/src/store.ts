@@ -310,11 +310,18 @@ export class KnowledgeStore {
     return entity;
   }
 
+  /**
+   * Hypotheses awaiting confirmation.
+   * Default (no type): Decision and Idea only — observation-sourced Artifacts
+   * are auto-confirmed and Event noise stays out of the claim queue.
+   * Pass an explicit type (e.g. Artifact) to list that type's hypotheses.
+   */
   listHypotheses(type?: Entity['type']): Entity[] {
+    const claimTypes = new Set<Entity['type']>(['Decision', 'Idea']);
     return this.state.entities.filter(
       (e) =>
         e.confirmation_state === 'hypothesized' &&
-        (type === undefined || e.type === type),
+        (type !== undefined ? e.type === type : claimTypes.has(e.type)),
     );
   }
 

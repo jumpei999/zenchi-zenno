@@ -179,7 +179,7 @@ Phase 1 ships a thin local MCP server (`@zenchi-zenno/mcp-server`, `zz mcp`) wit
 | `search_entities`    | Full-text and filter search over canonical entities  |
 | `get_decision_trace` | Walk Decision graph with evidence and `derived_from` |
 | `list_evidence`      | Evidence and Observations for an entity              |
-| `list_hypotheses`    | Hypothesized entities awaiting confirmation          |
+| `list_hypotheses`    | Decision/Idea hypotheses awaiting confirmation       |
 
 Planned later: `get_entity`, `get_entity_graph`.
 

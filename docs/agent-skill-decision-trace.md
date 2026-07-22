@@ -33,14 +33,14 @@ export GITHUB_TOKEN=ghp_...   # or ZZ_GITHUB_TOKEN
 pnpm zz ingest --connector github --repo owner/name
 ```
 
-Review hypotheses before treating them as accepted knowledge:
+Review **Decision / Idea** hypotheses before treating them as accepted knowledge:
 
 ```bash
 pnpm zz confirm --list
 pnpm zz confirm --accept <entity-id>
 ```
 
-Extractors never auto-confirm Decisions. Confidence bands (`high` / `medium` / `low`) are labels, not truth.
+Source-derived **Artifacts** (commits, docs, chats) are auto-confirmed as observation facts. Extractors never auto-confirm **Decisions**. Confidence bands (`high` / `medium` / `low`) are labels, not truth.
 
 ## CLI workflow
 

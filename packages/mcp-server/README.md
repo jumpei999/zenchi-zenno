@@ -11,7 +11,7 @@ Exposes canonical knowledge tools over stdio (JSON-RPC):
 | `search_entities`    | Full-text search                                        |
 | `get_decision_trace` | Decision → evidence / `derived_from` / related entities |
 | `list_evidence`      | Evidence snippets for an entity id                      |
-| `list_hypotheses`    | Same as `zz confirm --list`                             |
+| `list_hypotheses`    | Decision/Idea queue (same as `zz confirm --list`)       |
 
 ## Run
 

@@ -82,8 +82,10 @@ This glossary defines terms used consistently across zenchi-zenno. When in doubt
 
 ### Hypothesis vs Confirmed
 
-- Extractor infers a Decision from a Slack thread → **Hypothesis** (`confirmation_state: hypothesized`).
+- Extractor materializes a commit / doc / chat as an **Artifact** → **Confirmed** by policy (`provenance.policy: observation_fact`). These are observation facts, not claims.
+- Extractor infers a **Decision** or **Idea** from source text → **Hypothesis** (`confirmation_state: hypothesized`).
 - User confirms in CLI → **Confirmed** (`HypothesisConfirmed` domain event).
+- User rejects in CLI → **Archived** (`HypothesisRejected`); rejected entities are hidden from default search.
 
 ---
 

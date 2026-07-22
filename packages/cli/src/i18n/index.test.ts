@@ -53,6 +53,20 @@ describe('createT', () => {
     assert.equal(t('search.no_matches'), ja['search.no_matches']);
   });
 
+  it('documents observation-fact auto-confirm policy in both locales', () => {
+    const enT = createT('en');
+    const jaT = createT('ja');
+    assert.match(enT('ingest.note_review'), /auto-confirmed/);
+    assert.match(enT('confirm.description'), /Decision\/Idea/);
+    assert.match(enT('confirm.tip_low_confidence'), /auto-confirmed/);
+    assert.match(jaT('ingest.note_review'), /自動確定/);
+    assert.match(jaT('confirm.description'), /Decision\/Idea/);
+    assert.match(jaT('confirm.no_hypotheses'), /Decision\/Idea/);
+    // Canonical identifiers stay English in both locales
+    assert.match(enT('confirm.description'), /Artifacts/);
+    assert.match(jaT('confirm.description'), /Artifact/);
+  });
+
   it('falls back to English for missing ja keys via catalog completeness', () => {
     const enKeys = Object.keys(en).sort();
     const jaKeys = Object.keys(ja).sort();

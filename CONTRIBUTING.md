@@ -37,18 +37,18 @@ ZZ_LANG=ja pnpm zz confirm --list
 
 ### Hypothesis workflow
 
-Extracted entities start as **hypotheses**. Do not treat them as ground truth until confirmed:
+**Decision** and **Idea** extractions from sources start as **hypotheses**. Do not treat them as ground truth until confirmed. Source-derived **Artifacts** (commits, docs, chats) are auto-confirmed as observation facts and do not appear in the default confirm queue.
 
 ```bash
-pnpm zz confirm --list                 # evidence + confidence bands
+pnpm zz confirm --list                 # Decision/Idea + evidence + confidence bands
 pnpm zz confirm --accept <id>          # single accept
-pnpm zz confirm --reject <id>          # single reject
+pnpm zz confirm --reject <id>          # single reject (hidden from default search)
 pnpm zz confirm --accept-all --type Decision   # bulk (use carefully)
 pnpm zz create --type Person --title "Ada" --identity github:ada
 pnpm zz mcp                            # local MCP egress for agents
 ```
 
-Low-confidence extracted entities should usually stay hypothesized until a human reviews the evidence.
+Low-confidence Decision/Idea hypotheses should usually stay hypothesized until a human reviews the evidence.
 
 ## Documentation languages
 

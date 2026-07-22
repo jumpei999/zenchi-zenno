@@ -13,7 +13,7 @@ stdio（JSON-RPC）経由で正規知識ツールを公開します:
 | `search_entities`    | 全文検索                                                |
 | `get_decision_trace` | Decision → Evidence / `derived_from` / 関連エンティティ |
 | `list_evidence`      | エンティティ ID の Evidence スニペット                  |
-| `list_hypotheses`    | `zz confirm --list` 相当                                |
+| `list_hypotheses`    | Decision/Idea キュー（`zz confirm --list` 相当）        |
 
 ## 実行
 

@@ -52,7 +52,8 @@ pnpm zz ingest --connector github --path ./fixtures/github
 # export GITHUB_TOKEN=...   # or ZZ_GITHUB_TOKEN; scopes: contents:read, pull-requests:read
 # pnpm zz ingest --connector github --repo owner/name
 
-# Extractions are hypothesized — review evidence, then accept or reject
+# Extractions Decision/Idea are hypothesized — review, then accept or reject
+# (source Artifacts from commits/docs/chat are auto-confirmed)
 pnpm zz confirm --list
 pnpm zz confirm --accept <entity-id>
 
@@ -66,7 +67,7 @@ pnpm zz create --type Project --title "zenchi-zenno MVP" --goal "Ship Personal O
 pnpm zz mcp
 ```
 
-**Hypothesis → Confirmation:** Heuristic extractors never auto-confirm Decisions. Always review with `zz confirm` before treating knowledge as accepted.
+**Hypothesis → Confirmation:** Source-derived **Artifacts** (commits, docs, chats) are auto-confirmed as observation facts. **Decisions** and **Ideas** stay hypothesized until you review them with `zz confirm`. Extractors never auto-confirm Decisions.
 
 ## Languages
 

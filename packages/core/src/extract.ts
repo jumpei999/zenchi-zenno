@@ -51,7 +51,8 @@ function matchAny(text: string, patterns: RegExp[]): boolean {
 
 /**
  * Heuristic extractor for Phase 1 MVP.
- * Produces hypothesized entities only — never auto-confirms Decisions.
+ * Observation-sourced Artifacts are auto-confirmed (facts).
+ * Decision / Idea remain hypothesized — never auto-confirmed.
  */
 export function extractFromObservation(
   store: KnowledgeStore,
@@ -67,7 +68,7 @@ export function extractFromObservation(
   const ev = store.addEvidence(observation.id, 'extracted_from_observation');
   evidence.push(ev);
 
-  // Always create an Artifact for document-like sources
+  // Always create an Artifact for document-like sources (observation fact → confirmed)
   if (
     observation.source_type === 'doc.revision' ||
     observation.source_type === 'ai.conversation' ||
@@ -83,9 +84,13 @@ export function extractFromObservation(
       summary: text.slice(0, 280) || undefined,
       status: 'active',
       confidence: 0.9,
-      confirmation_state: 'hypothesized',
+      confirmation_state: 'confirmed',
       evidence_refs: [ev.id],
-      provenance: { extractor: 'heuristic-v0.1', connector_version: '0.1.0' },
+      provenance: {
+        extractor: 'heuristic-v0.1',
+        connector_version: '0.1.0',
+        policy: 'observation_fact',
+      },
       attributes: {
         media_type: 'text/plain',
         canonical_uri: observation.pointers?.path ?? observation.pointers?.url,
@@ -230,6 +235,8 @@ export function searchEntities(entities: Entity[], query: string): Entity[] {
   const rawTokens = q.split(' ').filter(Boolean);
   return entities
     .filter((e) => {
+      // Rejected hypotheses are archived — hide from default search
+      if (e.confirmation_state === 'archived') return false;
       const hay = normalizeText(
         [e.title, e.summary ?? '', e.type, e.status, ...(e.tags ?? [])].join(
           ' ',

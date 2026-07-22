@@ -58,7 +58,8 @@ pnpm zz ingest --connector github --path ./fixtures/github
 # export GITHUB_TOKEN=...   # または ZZ_GITHUB_TOKEN; scopes: contents:read, pull-requests:read
 # pnpm zz ingest --connector github --repo owner/name
 
-# 抽出結果は仮説 — Evidence を見てから accept / reject
+# Decision/Idea 仮説は確認が必要 — Evidence を見てから accept / reject
+# （commit / 文書 / チャット由来の Artifact は自動確定）
 pnpm zz confirm --list
 pnpm zz confirm --accept <entity-id>
 
@@ -72,7 +73,7 @@ pnpm zz create --type Project --title "zenchi-zenno MVP" --goal "Ship Personal O
 pnpm zz mcp
 ```
 
-**Hypothesis → Confirmation:** ヒューリスティック抽出は Decision を自動確定しません。受け入れた知識として扱う前に、必ず `zz confirm` でレビューしてください。
+**Hypothesis → Confirmation:** ソース由来の **Artifact**（commit・文書・チャット）は観測事実として自動確定されます。**Decision** と **Idea** は仮説のまま残り、`zz confirm` でレビューするまで受け入れ知識になりません。抽出器は Decision を自動確定しません。
 
 ## 言語
 
