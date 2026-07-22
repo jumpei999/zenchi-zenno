@@ -102,8 +102,10 @@
 
 ### Hypothesis vs 確認済み
 
-- エクストラクターは、Slack スレッドから Decision を推論します → **Hypothesis** (`confirmation_state: hypothesized`)。
-- ユーザーは CLI → **確認済み** (`HypothesisConfirmed` ドメイン イベント) で確認します。
+- 抽出器が commit / 文書 / チャットを **Artifact** として実体化 → ポリシーにより **確認済み**（`provenance.policy: observation_fact`）。これは観測事実であり主張ではありません。
+- 抽出器がソース本文から **Decision** または **Idea** を推論 → **Hypothesis**（`confirmation_state: hypothesized`）。
+- ユーザーが CLI で確定 → **確認済み**（`HypothesisConfirmed` ドメインイベント）。
+- ユーザーが CLI で却下 → **archived**（`HypothesisRejected`）。却下エンティティは既定の検索から隠れます。
 
 ---
 

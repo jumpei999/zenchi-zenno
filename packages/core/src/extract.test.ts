@@ -13,6 +13,7 @@ import {
   KnowledgeStore,
   newId,
   nowIso,
+  searchEntities,
 } from './index.js';
 
 // Runtime path is packages/core/dist/*.js → repo fixtures/
@@ -65,6 +66,13 @@ describe('extractFromObservation fixtures', () => {
       assert.equal(decision.confirmation_state, 'hypothesized');
       assert.equal(confidenceLabel(decision.confidence), 'medium');
       assert.ok((decision.confidence ?? 0) < 0.8);
+      const artifact = artifacts[0];
+      assert.ok(artifact);
+      assert.equal(artifact.confirmation_state, 'confirmed');
+      assert.equal(artifact.provenance?.policy, 'observation_fact');
+      assert.equal(store.listHypotheses().length, decisions.length);
+      assert.ok(store.listHypotheses().every((e) => e.type === 'Decision'));
+      assert.equal(store.listHypotheses('Artifact').length, 0);
 
       const trace = decisionTrace(store, 'postgres');
       assert.ok(trace.nodes.length >= 1);
@@ -115,6 +123,46 @@ describe('extractFromObservation fixtures', () => {
       assert.ok(idea);
       assert.equal(idea.confirmation_state, 'hypothesized');
       assert.equal(confidenceLabel(idea.confidence), 'low');
+      const artifacts = store.entities.filter((e) => e.type === 'Artifact');
+      assert.ok(artifacts.every((a) => a.confirmation_state === 'confirmed'));
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it('auto-confirms code.change Artifact while Decision stays hypothesized', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'zenchi-'));
+    try {
+      const store = KnowledgeStore.init(dir, 'test');
+      const body =
+        'We decided to adopt PostgreSQL as the primary store.\n\nSHA: abc123';
+      const sum = checksum(body);
+      store.storeSourceRecord(body, 'abc123', sum);
+      const obs = store.ingestObservation({
+        id: newId(),
+        source_system: 'github',
+        source_type: 'code.change',
+        source_native_id: 'abc123',
+        observed_at: nowIso(),
+        title: 'We decided to adopt PostgreSQL as the primary store.',
+        text: body,
+        content_ref: 'x',
+        checksum: sum,
+      });
+      assert.ok(obs);
+      const result = extractFromObservation(store, obs);
+      applyExtract(store, result);
+
+      const artifacts = store.entities.filter((e) => e.type === 'Artifact');
+      const decisions = store.entities.filter((e) => e.type === 'Decision');
+      assert.equal(artifacts.length, 1);
+      assert.equal(artifacts[0]?.confirmation_state, 'confirmed');
+      assert.ok(decisions.length >= 1);
+      assert.ok(
+        decisions.every((d) => d.confirmation_state === 'hypothesized'),
+      );
+      assert.ok(store.listHypotheses().every((e) => e.type === 'Decision'));
+      assert.equal(store.listHypotheses().length, decisions.length);
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
@@ -170,6 +218,40 @@ describe('createManualEntity', () => {
       assert.equal(person.confirmation_state, 'confirmed');
       assert.equal(project.confirmation_state, 'confirmed');
       assert.equal(person.provenance?.extractor, 'manual');
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe('searchEntities trust', () => {
+  it('excludes archived entities and prefers confirmed', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'zenchi-'));
+    try {
+      const store = KnowledgeStore.init(dir, 'test');
+      store.createManualEntity({
+        type: 'Project',
+        title: 'Postgres rollout',
+      });
+      const hyp = store.createManualEntity({
+        type: 'Decision',
+        title: 'Postgres candidate',
+      });
+      hyp.confirmation_state = 'hypothesized';
+      hyp.updated_at = nowIso();
+      store.upsertEntity(hyp);
+
+      const rejected = store.createManualEntity({
+        type: 'Idea',
+        title: 'Postgres alternative',
+      });
+      store.setConfirmation(rejected.id, 'rejected');
+
+      const hits = searchEntities(store.entities, 'postgres');
+      assert.ok(hits.every((e) => e.confirmation_state !== 'archived'));
+      assert.ok(!hits.some((e) => e.id === rejected.id));
+      assert.equal(hits[0]?.confirmation_state, 'confirmed');
+      assert.ok(hits.some((e) => e.id === hyp.id));
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

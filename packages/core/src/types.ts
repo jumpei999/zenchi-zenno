@@ -51,6 +51,8 @@ export interface Provenance {
   model?: string;
   prompt_version?: string;
   connector_version?: string;
+  /** Auto-confirm policy when human review is not required (e.g. observation_fact). */
+  policy?: string;
 }
 
 export interface Entity {

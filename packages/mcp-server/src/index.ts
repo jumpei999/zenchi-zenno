@@ -65,7 +65,7 @@ const TOOLS = [
   {
     name: 'list_hypotheses',
     description:
-      'List hypothesized entities awaiting confirmation (same as `zz confirm --list`).',
+      'List Decision/Idea hypotheses awaiting confirmation (same as `zz confirm --list`; source Artifacts are auto-confirmed).',
     inputSchema: {
       type: 'object',
       properties: {

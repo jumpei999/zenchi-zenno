@@ -35,14 +35,14 @@ export GITHUB_TOKEN=ghp_...   # または ZZ_GITHUB_TOKEN
 pnpm zz ingest --connector github --repo owner/name
 ```
 
-受け入れた知識として扱う前に仮説をレビューします:
+受け入れた知識として扱う前に **Decision / Idea** 仮説をレビューします:
 
 ```bash
 pnpm zz confirm --list
 pnpm zz confirm --accept <entity-id>
 ```
 
-抽出器は Decision を自動確定しません。confidence 帯（`high` / `medium` / `low`）はラベルであり、真実ではありません。
+ソース由来の **Artifact**（commit・文書・チャット）は観測事実として自動確定されます。抽出器は **Decision** を自動確定しません。confidence 帯（`high` / `medium` / `low`）はラベルであり、真実ではありません。
 
 ## CLI ワークフロー
 

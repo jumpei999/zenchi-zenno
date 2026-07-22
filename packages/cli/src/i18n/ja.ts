@@ -10,7 +10,7 @@ export const ja: Messages = {
   'init.description': '.zz/ 配下に個人ワークスペースを初期化する',
   'init.initialized': 'ワークスペース {id} を {path} に初期化しました',
   'ingest.description':
-    'コネクタ経由で Observation を取り込み、仮説エンティティを抽出する',
+    'コネクタ経由で Observation を取り込み、エンティティを抽出する',
   'ingest.option.connector': 'markdown-local | chatgpt-export | github',
   'ingest.option.path':
     'エクスポートパスまたはディレクトリ（GitHub API モード以外は必須）',
@@ -23,7 +23,7 @@ export const ja: Messages = {
   'ingest.error.path_or_repo':
     'エクスポート／ローカルコネクタには --path を、API モードには GitHub トークン付きの --repo を指定してください。',
   'ingest.note_review':
-    '抽出されたエンティティは確認するまで仮説です。確認: zz confirm --list',
+    'ソース由来 Artifact は自動確定されます。Decision/Idea 仮説の確認: zz confirm --list',
   'search.description': '正規エンティティの全文検索',
   'search.argument.query': '検索クエリ',
   'search.no_matches': '一致するものがありません。',
@@ -35,18 +35,18 @@ export const ja: Messages = {
   'trace.decision_header': '── Decision ──',
   'trace.related_entities': '  related_entities（共有 evidence）:',
   'confirm.description':
-    '仮説エンティティの一覧または確定／却下（抽出は自動確定しません）',
-  'confirm.option.list': '仮説エンティティと evidence を一覧（デフォルト）',
+    'Decision/Idea 仮説の一覧または確定／却下（ソース由来 Artifact は自動確定）',
+  'confirm.option.list': 'Decision/Idea 仮説と evidence を一覧（デフォルト）',
   'confirm.option.accept': 'エンティティ ID を確定する',
   'confirm.option.reject': 'エンティティ ID を却下する',
   'confirm.option.accept_all': '一覧の仮説をすべて確定する（--type を尊重）',
   'confirm.option.reject_all': '一覧の仮説をすべて却下する（--type を尊重）',
   'confirm.hypothesis_header': '── 仮説 ──',
-  'confirm.no_hypotheses': '仮説エンティティはありません。',
-  'confirm.list_count': '{count} 件の仮説エンティティ（未確定）:\n',
-  'confirm.list_count_one': '1 件の仮説エンティティ（未確定）:\n',
+  'confirm.no_hypotheses': '仮説の Decision/Idea はありません。',
+  'confirm.list_count': '{count} 件の仮説 Decision/Idea（未確定）:\n',
+  'confirm.list_count_one': '1 件の仮説 Decision/Idea（未確定）:\n',
   'confirm.tip_low_confidence':
-    'ヒント: 低 confidence の抽出結果は、accept するまで仮説のままにしておくのがよいです。',
+    'ヒント: Decision/Idea 仮説は accept するまで暫定扱いです。ソース由来 Artifact は自動確定されます。',
   'confirm.none_to_action': '{action} 対象の仮説エンティティはありません。',
   'confirm.confirmed': '確定しました {type} {id}: {title}',
   'confirm.rejected': '却下しました {type} {id}: {title}',

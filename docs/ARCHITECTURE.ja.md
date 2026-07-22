@@ -696,7 +696,7 @@ flowchart LR
 | 情報源                                 | ChatGPT エクスポート、GitHub (エクスポートまたは読み取り専用 API)、ローカル マークダウン |
 | Entity タイプ                          | Decision、Idea、Artifact、Event                                                          |
 | Interest / Learning / Person / Project | 最小限または手動で作成                                                                   |
-| コア                                   | Evidence リンクが必要、Confirmation CLI、フルテキスト + 単純なグラフ トラバーサル        |
+| コア                                   | Evidence リンクが必要、Confirmation CLI（Decision/Idea）、ソース由来 Artifact は自動確定 |
 | エージェントのスキル                   | 「X について私は何を判断しましたか?その証拠は何ですか?」                                 |
 
 <a id="out-of-scope"></a>
@@ -705,9 +705,10 @@ flowchart LR
 
 - Slack / Gmail / ドライブのライブ同期
 - マルチテナント ACL
-- 自動確認された決定
+- 自動確認された **Decision**（ソース由来 Artifact の自動確定は許可）
 - モバイルクライアント
 - クラウドベンダーのロックイン
+- GitHub テキストからの賢い Decision 抽出（次スプリント候補）
 
 <a id="success-metrics"></a>
 
